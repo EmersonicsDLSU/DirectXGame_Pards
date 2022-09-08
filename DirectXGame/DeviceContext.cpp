@@ -60,6 +60,7 @@ void DeviceContext::setViewportSize(UINT width, UINT height)
 
 void DeviceContext::setVertexShader(VertexShader* vertex_shader)
 {
+	// Set a vertex shader to the device.
 	m_device_context->VSSetShader(vertex_shader->m_vs, nullptr, 0);
 }
 

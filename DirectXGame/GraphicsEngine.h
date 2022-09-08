@@ -43,6 +43,7 @@ private:
 	ID3D11DeviceContext* m_imm_context;
 
 private:
+	// a buffer that contains the compiled vertex shader and its size in the memory
 	ID3DBlob* m_blob = nullptr;
 
 

@@ -112,7 +112,9 @@ VertexShader* GraphicsEngine::createVertexShader(const void* shader_byte_code, s
 
 bool GraphicsEngine::compileVertexShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size)
 {
+	// a buffer that contains the error and warning messages in case the compilation fails
 	ID3DBlob* error_blob = nullptr;
+	// compiles the HLSL file of the vertex shader
 	if (!SUCCEEDED(D3DCompileFromFile(file_name, nullptr, nullptr, entry_point_name, "vs_5_0", 0, 0, &m_blob, &error_blob)))
 	{
 		if (error_blob) error_blob->Release();
