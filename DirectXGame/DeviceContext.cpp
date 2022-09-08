@@ -2,6 +2,7 @@
 #include "SwapChain.h"
 #include "VertexBuffer.h"
 #include "VertexShader.h"
+#include "PixelShader.h"
 
 DeviceContext::DeviceContext(ID3D11DeviceContext* device_context) :m_device_context(device_context)
 {
@@ -24,7 +25,6 @@ void DeviceContext::setVertexBuffer(VertexBuffer* vertex_buffer)
 	UINT offset = 0;
 	// Bind an array of vertex buffers to the input-assembler stage.
 	m_device_context->IASetVertexBuffers(0, 1, &vertex_buffer->m_buffer, &stride, &offset);
-	// Bind an input-layout object to the input-assembler stage.
 	m_device_context->IASetInputLayout(vertex_buffer->m_layout);
 }
 
@@ -62,6 +62,11 @@ void DeviceContext::setVertexShader(VertexShader* vertex_shader)
 {
 	// Set a vertex shader to the device.
 	m_device_context->VSSetShader(vertex_shader->m_vs, nullptr, 0);
+}
+
+void DeviceContext::setPixelShader(PixelShader* pixel_shader)
+{
+	m_device_context->PSSetShader(pixel_shader->m_ps, nullptr, 0);
 }
 
 

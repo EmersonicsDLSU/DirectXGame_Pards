@@ -8,13 +8,13 @@ class SwapChain
 {
 public:
 	SwapChain();
-	// Initialize SwapChain for a window
+	//Initialize SwapChain for a window
 	bool init(HWND hwnd, UINT width, UINT height);
 
 
 	bool present(bool vsync);
 
-	// Release the swap chain
+	//Release the swap chain
 	bool release();
 	~SwapChain();
 private:
@@ -26,3 +26,4 @@ private:
 private:
 	friend class DeviceContext;
 };
+
