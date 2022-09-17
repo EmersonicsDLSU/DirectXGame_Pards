@@ -4,9 +4,9 @@
 class SwapChain;
 class DeviceContext;
 class VertexBuffer;
+class ConstantBuffer;
 class VertexShader;
 class PixelShader;
-
 
 // Singleton class
 // initializes the IDXGI components and setting the graphics pipeline stages
@@ -23,6 +23,7 @@ public:
 	SwapChain* createSwapChain();
 	DeviceContext* getImmediateDeviceContext();
 	VertexBuffer* createVertexBuffer();
+	ConstantBuffer* createConstantBuffer();
 	VertexShader* createVertexShader(const void* shader_byte_code, size_t byte_code_size);
 	PixelShader* createPixelShader(const void* shader_byte_code, size_t byte_code_size);
 public:
@@ -58,6 +59,7 @@ private:
 private:
 	friend class SwapChain;
 	friend class VertexBuffer;
+	friend class ConstantBuffer;
 	friend class VertexShader;
 	friend class PixelShader;
 
