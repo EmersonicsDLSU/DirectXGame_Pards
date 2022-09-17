@@ -29,14 +29,41 @@ void AppWindow::onCreate()
 	RECT rc = this->getClientWindowRect();
 	m_swap_chain->init(this->m_hwnd, rc.right - rc.left, rc.bottom - rc.top);
 
+#define SAMPLE 1
+#if SAMPLE == 0 // RAINBOW RECTANGLE
 	vertex list[] =
 	{
 		//X - Y - Z
 		{-0.5f,-0.5f,0.0f,   1,0,0}, // POS1
 		{-0.5f,0.5f,0.0f,    0,1,0}, // POS2
-		{ 0.5f,-0.5f,0.0f,   0,0,1},// POS2
-		{ 0.5f,0.5f,0.0f,    1,1,0}
+		{ 0.5f,0.5f,0.0f,    0,0,1}, // POS3
+
+		{ 0.5f,0.5f,0.0f,   0,0,1}, // POS1
+		{ 0.5f,-0.5f,0.0f,   1,0.68f,0.26f}, // POS2
+		{ -0.5f,-0.5f,0.0f,   1,0,0} // POS3
 	};
+#elif SAMPLE == 1 // RAINBOW TRIANGLE
+	vertex list[] =
+	{
+		//X - Y - Z
+		{-0.5f,-0.5f,0.0f,   1,0,0}, // POS1
+		{ 0.0f,0.5f,0.0f,    0,1,0}, // POS2
+		{ 0.5f,-0.5f,0.0f,    0,0,1}, // POS3
+		
+	};
+#elif SAMPLE == 2 // GREEN RECTANGLE
+	vertex list[] =
+	{
+		//X - Y - Z
+		{-0.5f,-0.5f,0.0f,   0,1,0}, // POS1
+		{-0.5f,0.5f,0.0f,    0,1,0}, // POS2
+		{ 0.5f,0.5f,0.0f,    0,1,0}, // POS3
+
+		{ 0.5f,0.5f,0.0f,   0,1,0}, // POS1
+		{ 0.5f,-0.5f,0.0f,   0,1,0}, // POS2
+		{ -0.5f,-0.5f,0.0f,   0,1,0}, // POS3
+	};
+#endif
 
 	m_vb = GraphicsEngine::get()->createVertexBuffer();
 	UINT size_list = ARRAYSIZE(list);
@@ -77,7 +104,7 @@ void AppWindow::onUpdate()
 	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
 
 	// FINALLY DRAW THE TRIANGLE
-	GraphicsEngine::get()->getImmediateDeviceContext()->drawTriangleStrip(m_vb->getSizeVertexList(), 0);
+	GraphicsEngine::get()->getImmediateDeviceContext()->drawTriangleList(m_vb->getSizeVertexList(), 0);
 	m_swap_chain->present(true);
 }
 
