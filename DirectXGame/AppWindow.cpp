@@ -31,10 +31,10 @@ SOFTWARE.*/
 struct vertex
 {
 	Vector3D position;
-	Vector3D position1;
 	Vector3D color;
 	Vector3D color1;
 };
+
 
 // constant buffer; this is updated per frame
 __declspec(align(16))
@@ -65,20 +65,39 @@ void AppWindow::updateQuadPosition()
 
 	Matrix4x4 temp;
 
-	m_delta_scale += m_delta_time / 0.15f;
+	m_delta_scale += m_delta_time / 0.55f;
+
 	// creates a scale animation
-	cc.m_world.setScale(Vector3D::lerp(Vector3D(0.5, 0.5, 0), Vector3D(1.0f, 1.0f, 0), (sin(m_delta_scale) + 1.0f) / 2.0f));
+	//cc.m_world.setScale(Vector3D::lerp(Vector3D(0.5, 0.5, 0), Vector3D(1.0f, 1.0f, 0), (sin(m_delta_scale) + 1.0f) / 2.0f));
 	// creates a translation animation
-	temp.setTranslation(Vector3D::lerp(Vector3D(-1.5f, -1.5f, 0), Vector3D(1.5f, 1.5f, 0), m_delta_pos));
+	//temp.setTranslation(Vector3D::lerp(Vector3D(-1.5f, -1.5f, 0), Vector3D(1.5f,1.5f, 0), m_delta_pos));
 
 	// Transformation of matrices; Note that order is important
+	//cc.m_world *= temp;
+
+	cc.m_world.setScale(Vector3D(1, 1, 1));
+
+	// rotates it in the Z-axis
+	temp.setIdentity();
+	temp.setRotationZ(m_delta_scale);
 	cc.m_world *= temp;
+
+	// rotates it in the Y-axis
+	temp.setIdentity();
+	temp.setRotationY(m_delta_scale);
+	cc.m_world *= temp;
+
+	// rotates it in the X-axis
+	temp.setIdentity();
+	temp.setRotationX(m_delta_scale);
+	cc.m_world *= temp;
+
 
 	cc.m_view.setIdentity();
 	cc.m_proj.setOrthoLH
 	(
-		(this->getClientWindowRect().right - this->getClientWindowRect().left) / 400.0f,
-		(this->getClientWindowRect().bottom - this->getClientWindowRect().top) / 400.0f,
+		(this->getClientWindowRect().right - this->getClientWindowRect().left) / 300.0f,
+		(this->getClientWindowRect().bottom - this->getClientWindowRect().top) / 300.0f,
 		-4.0f,
 		4.0f
 	);
@@ -100,53 +119,60 @@ void AppWindow::onCreate()
 
 	RECT rc = this->getClientWindowRect();
 	m_swap_chain->init(this->m_hwnd, rc.right - rc.left, rc.bottom - rc.top);
-#define SAMPLE 3
-#if SAMPLE == 0 // RAINBOW RECTANGLE
-	vertex list[] =
-	{
-		//X - Y - Z
-		{-0.5f,-0.5f,0.0f,   1,0,0}, // POS1
-		{-0.5f,0.5f,0.0f,    0,1,0}, // POS2
-		{ 0.5f,0.5f,0.0f,    0,0,1}, // POS3
 
-		{ 0.5f,0.5f,0.0f,   0,0,1}, // POS1
-		{ 0.5f,-0.5f,0.0f,   1,0.68f,0.26f}, // POS2
-		{ -0.5f,-0.5f,0.0f,   1,0,0} // POS3
-	};
-#elif SAMPLE == 1 // RAINBOW TRIANGLE
-	vertex list[] =
+	// list of all the vertex in the 3D Cube
+	vertex vertex_list[] =
 	{
 		//X - Y - Z
-		{-0.5f,-0.5f,0.0f,   1,0,0}, // POS1
-		{ 0.0f,0.5f,0.0f,    0,1,0}, // POS2
-		{ 0.5f,-0.5f,0.0f,    0,0,1}, // POS3
+		//FRONT FACE
+		{Vector3D(-0.5f,-0.5f,-0.5f),    Vector3D(1,0,0),  Vector3D(0.2f,0,0) },
+		{Vector3D(-0.5f,0.5f,-0.5f),    Vector3D(1,1,0), Vector3D(0.2f,0.2f,0) },
+		{ Vector3D(0.5f,0.5f,-0.5f),   Vector3D(1,1,0),  Vector3D(0.2f,0.2f,0) },
+		{ Vector3D(0.5f,-0.5f,-0.5f),     Vector3D(1,0,0), Vector3D(0.2f,0,0) },
+
+		//BACK FACE
+		{ Vector3D(0.5f,-0.5f,0.5f),    Vector3D(0,1,0), Vector3D(0,0.2f,0) },
+		{ Vector3D(0.5f,0.5f,0.5f),    Vector3D(0,1,1), Vector3D(0,0.2f,0.2f) },
+		{ Vector3D(-0.5f,0.5f,0.5f),   Vector3D(0,1,1),  Vector3D(0,0.2f,0.2f) },
+		{ Vector3D(-0.5f,-0.5f,0.5f),     Vector3D(0,1,0), Vector3D(0,0.2f,0) }
 
 	};
-#elif SAMPLE == 2 // GREEN RECTANGLE
-	vertex list[] =
-	{
-		//X - Y - Z
-		{-0.5f,-0.5f,0.0f,   0,1,0}, // POS1
-		{-0.5f,0.5f,0.0f,    0,1,0}, // POS2
-		{ 0.5f,0.5f,0.0f,    0,1,0}, // POS3
-
-		{ 0.5f,0.5f,0.0f,   0,1,0}, // POS1
-		{ 0.5f,-0.5f,0.0f,   0,1,0}, // POS2
-		{ -0.5f,-0.5f,0.0f,   0,1,0}, // POS3
-	};
-#elif SAMPLE == 3
-	vertex list[] =
-	{
-		//X - Y - Z
-		{Vector3D(-0.5f,-0.5f,0.0f),    Vector3D(-0.32f,-0.11f,0.0f),   Vector3D(0,0,0), Vector3D(0,1,0) }, // POS1
-		{Vector3D(-0.5f,0.5f,0.0f),     Vector3D(-0.11f,0.78f,0.0f),   Vector3D(1,1,0), Vector3D(0,1,1) }, // POS2
-		{ Vector3D(0.5f,-0.5f,0.0f),     Vector3D(0.75f,-0.73f,0.0f), Vector3D(0,0,1),  Vector3D(1,0,0) },// POS2
-		{ Vector3D(0.5f,0.5f,0.0f),     Vector3D(0.88f,0.77f,0.0f),    Vector3D(1,1,1), Vector3D(0,0,1) }
-	};
-#endif
 
 	m_vb = GraphicsEngine::get()->createVertexBuffer();
-	UINT size_list = ARRAYSIZE(list);
+	UINT size_list = ARRAYSIZE(vertex_list);
+
+	// list of all the triangle index with their vertex compositions
+	// this index list should reflect the vertex list
+	unsigned int index_list[] =
+	{
+		//FRONT SIDE
+		0,1,2,  //FIRST TRIANGLE
+		2,3,0,  //SECOND TRIANGLE
+		//BACK SIDE
+		4,5,6,
+		6,7,4,
+		//TOP SIDE
+		1,6,5,
+		5,2,1,
+		//BOTTOM SIDE
+		7,0,3,
+		3,4,7,
+		//RIGHT SIDE
+		3,2,5,
+		5,4,3,
+		//LEFT SIDE
+		7,6,1,
+		1,0,7
+	};
+
+
+	m_ib = GraphicsEngine::get()->createIndexBuffer();
+	UINT size_index_list = ARRAYSIZE(index_list);
+	// set the index list
+	m_ib->load(index_list, size_index_list);
+
+
+
 
 	// gets the byte code and size of the vertex shader
 	void* shader_byte_code = nullptr;
@@ -156,7 +182,7 @@ void AppWindow::onCreate()
 	// after a successful compiling, create the vertex buffer then
 	m_vs = GraphicsEngine::get()->createVertexShader(shader_byte_code, size_shader);
 	// drawing  object
-	m_vb->load(list, sizeof(vertex), size_list, shader_byte_code, size_shader);
+	m_vb->load(vertex_list, sizeof(vertex), size_list, shader_byte_code, size_shader);
 
 	GraphicsEngine::get()->releaseCompiledShader();
 
@@ -201,14 +227,18 @@ void AppWindow::onUpdate()
 
 	//SET THE VERTICES OF THE TRIANGLE TO DRAW
 	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
+	//SET THE INDICES OF THE TRIANGLE TO DRAW
+	GraphicsEngine::get()->getImmediateDeviceContext()->setIndexBuffer(m_ib);
+
 
 	// FINALLY DRAW THE TRIANGLE
-	GraphicsEngine::get()->getImmediateDeviceContext()->drawTriangleStrip(m_vb->getSizeVertexList(), 0);
+	GraphicsEngine::get()->getImmediateDeviceContext()->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);
 	m_swap_chain->present(true);
 
-	// update our delta time(difference of time between succeeding frames)
+
 	m_old_delta = m_new_delta;
 	m_new_delta = ::GetTickCount();
+
 	m_delta_time = (m_old_delta) ? ((m_new_delta - m_old_delta) / 1000.0f) : 0;
 }
 
@@ -216,6 +246,8 @@ void AppWindow::onDestroy()
 {
 	Window::onDestroy();
 	m_vb->release();
+	m_ib->release();
+	m_cb->release();
 	m_swap_chain->release();
 	m_vs->release();
 	m_ps->release();

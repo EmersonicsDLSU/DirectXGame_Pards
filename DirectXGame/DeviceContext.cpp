@@ -1,6 +1,31 @@
+/*MIT License
+
+C++ 3D Game Tutorial Series (https://github.com/PardCode/CPP-3D-Game-Tutorial-Series)
+
+Copyright (c) 2019-2022, PardCode
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.*/
+
 #include "DeviceContext.h"
 #include "SwapChain.h"
 #include "VertexBuffer.h"
+#include "IndexBuffer.h"
 #include "ConstantBuffer.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
@@ -29,6 +54,11 @@ void DeviceContext::setVertexBuffer(VertexBuffer* vertex_buffer)
 	m_device_context->IASetInputLayout(vertex_buffer->m_layout);
 }
 
+void DeviceContext::setIndexBuffer(IndexBuffer* index_buffer)
+{
+	m_device_context->IASetIndexBuffer(index_buffer->m_buffer, DXGI_FORMAT_R32_UINT, 0);
+}
+
 // draw the list of triangles on the screen
 void DeviceContext::drawTriangleList(UINT vertex_count, UINT start_vertex_index)
 {
@@ -36,6 +66,15 @@ void DeviceContext::drawTriangleList(UINT vertex_count, UINT start_vertex_index)
 	m_device_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	// Draw non-indexed, non-instanced primitives.
 	m_device_context->Draw(vertex_count, start_vertex_index);
+}
+
+// draw the triangles' indices on the screen
+void DeviceContext::drawIndexedTriangleList(UINT index_count, UINT start_vertex_index, UINT start_index_location)
+{
+	// our data will contain a list of primitive triangles
+	m_device_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	// Draw non-indexed, non-instanced primitives.
+	m_device_context->DrawIndexed(index_count, start_index_location, start_vertex_index);
 }
 
 // draw the strip of triangles on the screen
