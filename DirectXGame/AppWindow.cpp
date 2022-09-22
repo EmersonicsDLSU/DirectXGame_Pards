@@ -51,7 +51,7 @@ void AppWindow::updateQuadPosition()
 	// Transformation of matrices; Note that order is important
 	//cc.m_world *= temp;
 
-	cc.m_world.setScale(Vector3D(1, 1, 1));
+	cc.m_world.setScale(Vector3D(m_scale_cube, m_scale_cube, m_scale_cube));
 
 	// rotates it in the Z-axis
 	temp.setIdentity();
@@ -238,6 +238,17 @@ void AppWindow::onDestroy()
 	GraphicsEngine::get()->release();
 }
 
+void AppWindow::onFocus()
+{
+	// subscribe this class to the InputSystem
+	InputSystem::get()->addListener(this);
+}
+
+void AppWindow::onKillFocus()
+{
+	InputSystem::get()->removeListener(this);
+}
+
 // InputListener virtual method definitions
 void AppWindow::onKeyDown(int key)
 {
@@ -263,3 +274,30 @@ void AppWindow::onKeyUp(int key)
 {
 
 }
+
+void AppWindow::onMouseMove(const Point& delta_mouse_pos)
+{
+	m_rot_x -= delta_mouse_pos.m_y * m_delta_time;
+	m_rot_y -= delta_mouse_pos.m_x * m_delta_time;
+}
+
+void AppWindow::onLeftMouseDown(const Point& delta_mouse_pos)
+{
+	m_scale_cube = 0.5f;
+}
+
+void AppWindow::onLeftMouseUp(const Point& delta_mouse_pos)
+{
+	m_scale_cube = 1.0f;
+}
+
+void AppWindow::onRightMouseDown(const Point& delta_mouse_pos)
+{
+	m_scale_cube = 2.0f;
+}
+
+void AppWindow::onRightMouseUp(const Point& delta_mouse_pos)
+{
+	m_scale_cube = 1.0f;
+}
+
