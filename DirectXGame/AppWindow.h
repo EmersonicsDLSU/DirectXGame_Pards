@@ -6,6 +6,8 @@
 #include "VertexBuffer.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
+#include "ObjectCreation.h"
+#include "ObjectManager.h"
 
 // displays the main scene; handles the awake,update,end
 class AppWindow : public Window
@@ -20,7 +22,6 @@ public:
 	virtual void onDestroy() override;
 private:
 	SwapChain* m_swap_chain;
-	VertexBuffer* m_vb;
 	VertexShader* m_vs;
 	PixelShader* m_ps;
 };

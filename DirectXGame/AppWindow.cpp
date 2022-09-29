@@ -1,16 +1,5 @@
 #include "AppWindow.h"
 
-struct vec3
-{
-	float x, y, z;
-};
-
-struct vertex
-{
-	vec3 position;
-	vec3 color;
-};
-
 AppWindow::AppWindow()
 {
 }
@@ -29,53 +18,16 @@ void AppWindow::onCreate()
 	RECT rc = this->getClientWindowRect();
 	m_swap_chain->init(this->m_hwnd, rc.right - rc.left, rc.bottom - rc.top);
 
-#define SAMPLE 1
-#if SAMPLE == 0 // RAINBOW RECTANGLE
-	vertex list[] =
-	{
-		//X - Y - Z
-		{-0.5f,-0.5f,0.0f,   1,0,0}, // POS1
-		{-0.5f,0.5f,0.0f,    0,1,0}, // POS2
-		{ 0.5f,0.5f,0.0f,    0,0,1}, // POS3
-
-		{ 0.5f,0.5f,0.0f,   0,0,1}, // POS1
-		{ 0.5f,-0.5f,0.0f,   1,0.68f,0.26f}, // POS2
-		{ -0.5f,-0.5f,0.0f,   1,0,0} // POS3
-	};
-#elif SAMPLE == 1 // RAINBOW TRIANGLE
-	vertex list[] =
-	{
-		//X - Y - Z
-		{-0.5f,-0.5f,0.0f,   1,0,0}, // POS1
-		{ 0.0f,0.5f,0.0f,    0,1,0}, // POS2
-		{ 0.5f,-0.5f,0.0f,    0,0,1}, // POS3
-		
-	};
-#elif SAMPLE == 2 // GREEN RECTANGLE
-	vertex list[] =
-	{
-		//X - Y - Z
-		{-0.5f,-0.5f,0.0f,   0,1,0}, // POS1
-		{-0.5f,0.5f,0.0f,    0,1,0}, // POS2
-		{ 0.5f,0.5f,0.0f,    0,1,0}, // POS3
-
-		{ 0.5f,0.5f,0.0f,   0,1,0}, // POS1
-		{ 0.5f,-0.5f,0.0f,   0,1,0}, // POS2
-		{ -0.5f,-0.5f,0.0f,   0,1,0}, // POS3
-	};
-#endif
-
-	m_vb = GraphicsEngine::get()->createVertexBuffer();
-	UINT size_list = ARRAYSIZE(list);
-
 	// gets the byte code and size of the vertex shader
 	void* shader_byte_code = nullptr;
 	size_t size_shader = 0;
 	GraphicsEngine::get()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
 
 	m_vs = GraphicsEngine::get()->createVertexShader(shader_byte_code, size_shader);
+
 	// drawing  object
-	m_vb->load(list, sizeof(vertex), size_list, shader_byte_code, size_shader);
+	ObjectCreation::get()->InitializeVertices(shader_byte_code, size_shader);
+	//m_vb->load(list, sizeof(vertex), size_list, shader_byte_code, size_shader);
 
 	GraphicsEngine::get()->releaseCompiledShader();
 
@@ -90,8 +42,7 @@ void AppWindow::onUpdate()
 {
 	Window::onUpdate();
 	//CLEAR THE RENDER TARGET 
-	GraphicsEngine::get()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain,
-		0, 0.3f, 0.4f, 1);
+	GraphicsEngine::get()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain,0, 0.3f, 0.4f, 1);
 	//SET VIEWPORT OF RENDER TARGET IN WHICH WE HAVE TO DRAW
 	RECT rc = this->getClientWindowRect();
 	GraphicsEngine::get()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
@@ -100,18 +51,20 @@ void AppWindow::onUpdate()
 	GraphicsEngine::get()->getImmediateDeviceContext()->setPixelShader(m_ps);
 
 
-	//SET THE VERTICES OF THE TRIANGLE TO DRAW
-	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
-
-	// FINALLY DRAW THE TRIANGLE
-	GraphicsEngine::get()->getImmediateDeviceContext()->drawTriangleList(m_vb->getSizeVertexList(), 0);
+	//SET THE VERTICES OF THE TRIANGLE TO DRAW; FINALLY DRAW THE TRIANGLES
+	std::vector<AGameobject*>::iterator i;
+	for (i = ObjectManager::get()->objectList.begin(); i != ObjectManager::get()->objectList.end(); ++i)
+	{
+		static_cast<AGameobject*>(*i)->update();
+	}
 	m_swap_chain->present(true);
 }
 
 void AppWindow::onDestroy()
 {
 	Window::onDestroy();
-	m_vb->release();
+	ObjectCreation::get()->release();
+	ObjectManager::get()->release();
 	m_swap_chain->release();
 	m_vs->release();
 	m_ps->release();
