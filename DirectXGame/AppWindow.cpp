@@ -57,6 +57,7 @@ void AppWindow::onUpdate()
 	{
 		static_cast<AGameobject*>(*i)->update();
 	}
+
 	m_swap_chain->present(true);
 }
 

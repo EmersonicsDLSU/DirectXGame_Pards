@@ -28,7 +28,6 @@ public:
 	bool release();
 	static ObjectCreation* get();
 	void InitializeVertices(void* shader_byte_code, size_t size_shader);
-	UINT getSizeOfVetex();
 private:
 	friend class AppWindow;
 	friend class AGameobject;
