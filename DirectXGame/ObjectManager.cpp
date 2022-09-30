@@ -16,7 +16,7 @@ bool ObjectManager::release()
 		static_cast<AGameobject*>(*i)->release();
 		delete *i;
 	}
-
+	objectList.clear();
 	return true;
 }
 
