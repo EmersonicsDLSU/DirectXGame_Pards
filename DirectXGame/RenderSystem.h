@@ -2,8 +2,12 @@
 #include <d3d11.h>
 #include "Prerequisites.h"
 
-// Singleton class
-// initializes the IDXGI components and setting the graphics pipeline stages
+/*
+ * Initializes the IDXGI components and setting the graphics pipeline stages.
+ * Handles and provides all the functionalities made available by a graphics API
+ * like ‘DirectX’, ‘Vulkan’, ‘Metal’ and so onhandle and provide all the functionalities
+ * made available by a graphics API like ‘DirectX’, ‘Vulkan’, ‘Metal’ and so on
+*/
 class RenderSystem
 {
 public:
@@ -41,9 +45,6 @@ private:
 private:
 	// a buffer that contains the compiled vertex shader and its size in the memory
 	ID3DBlob* m_blob = nullptr;
-
-
-
 	ID3DBlob* m_vsblob = nullptr;
 	ID3DBlob* m_psblob = nullptr;
 	ID3D11VertexShader* m_vs = nullptr;

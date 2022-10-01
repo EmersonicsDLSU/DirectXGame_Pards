@@ -4,7 +4,7 @@
 #include "RenderSystem.h"
 
 // Singleton class
-// initializes the IDXGI components and setting the graphics pipeline stages
+// initializes the RenderSystem
 class GraphicsEngine
 {
 public:
