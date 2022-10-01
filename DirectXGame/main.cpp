@@ -1,16 +1,35 @@
 #include "AppWindow.h"
+#include "InputSystem.h"
 
 int main()
 {
-	AppWindow app;
-	// 
-	if (app.init())
+	try
 	{
-		while (app.isRun())
+		// initialize our GraphicsEngine
+		GraphicsEngine::create();
+		// initialize our InputSystem
+		InputSystem::create();
+	}
+	catch (...) { return -1; }
+	{
+		try
 		{
-			app.broadcast();
+			AppWindow app;
+			while (app.isRun());
+		}
+		catch (...) {
+			InputSystem::release();
+			GraphicsEngine::release();
+			return -1;
 		}
 	}
+
+	/* NOTE:
+	 * The order of release should be based on the order of creation.
+	 * Will follow the First in, Last out principle.
+	 */
+	InputSystem::release();
+	GraphicsEngine::release();
 
 	return 0;
 }
