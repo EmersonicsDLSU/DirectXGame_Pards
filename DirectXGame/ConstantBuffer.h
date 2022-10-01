@@ -1,7 +1,6 @@
 #pragma once
 #include <d3d11.h>
-
-class DeviceContext;
+#include "Prerequisites.h"
 
 // constant buffer is a block of data which can store different kinds of data types.
 // In the case of game engine, this is use to share data with the shaders(i.e. changing world view projection matrix).
@@ -9,13 +8,12 @@ class DeviceContext;
 class ConstantBuffer
 {
 public:
-	ConstantBuffer();
-	bool load(void* buffer, UINT size_buffer);
+	ConstantBuffer(void* buffer, UINT size_buffer, RenderSystem* system);
 	void update(DeviceContext* context, void* buffer);
-	bool release();
 	~ConstantBuffer();
 private:
 	ID3D11Buffer* m_buffer;
+	RenderSystem* m_system = nullptr;
 private:
 	friend class DeviceContext;
 };
