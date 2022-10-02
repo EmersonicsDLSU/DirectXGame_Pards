@@ -128,7 +128,7 @@ void AppWindow::onCreate()
 	// hides the cursor
 	InputSystem::get()->showCursor(false);
 
-	//m_wood_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\Textures\\wood.jpg");
+	// assign the texture file to the Texture pointer by passing the its path in the file
 	m_wood_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\wood.jpg");
 
 	RECT rc = this->getClientWindowRect();

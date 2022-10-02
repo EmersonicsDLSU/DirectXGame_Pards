@@ -1,7 +1,9 @@
 #pragma once
 #include "ResourceManager.h"
 
-
+/*
+ * Handles the creation of reference for texture resources
+ */
 class TextureManager : public ResourceManager
 {
 public:
