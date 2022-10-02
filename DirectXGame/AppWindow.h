@@ -43,6 +43,7 @@ private:
 	PixelShaderPtr m_ps;
 	ConstantBufferPtr m_cb;
 	IndexBufferPtr m_ib;
+	TexturePtr m_wood_tex;
 private:
 	long m_old_delta;
 	long m_new_delta;

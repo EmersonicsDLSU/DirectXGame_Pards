@@ -5,17 +5,15 @@ will contain the final transformed vertex position in the screen space coordinat
 // what is the structure of our vertex input
 struct VS_INPUT
 {
-	float4 position: POSITION;
-	float3 color: COLOR;
-	float3 color1: COLOR1;
+	float4 position: POSITION0;
+	float2 texcoord: TEXCOORD0;
 };
 
 // what is the structure of our vertex output
 struct VS_OUTPUT
 {
 	float4 position: SV_POSITION;
-	float3 color: COLOR;
-	float3 color1: COLOR1;
+	float2 texcoord: TEXCOORD0;
 };
 
 
@@ -42,8 +40,6 @@ VS_OUTPUT vsmain(VS_INPUT input)
 	//SCREEN SPACE - multiplies(mul) our position to the screen/projection matrix
 	output.position = mul(output.position, m_proj);
 
-
-	output.color = input.color;
-	output.color1 = input.color1;
+	output.texcoord = input.texcoord;
 	return output;
 }

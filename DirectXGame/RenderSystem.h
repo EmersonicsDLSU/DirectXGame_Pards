@@ -54,6 +54,7 @@ private:
 	friend class ConstantBuffer;
 	friend class VertexShader;
 	friend class PixelShader;
+	friend class Texture;
 
 };
 
