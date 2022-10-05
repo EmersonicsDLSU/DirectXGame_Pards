@@ -21,6 +21,8 @@ public:
 	void setVertexShader(const VertexShaderPtr& vertex_shader);
 	void setPixelShader(const PixelShaderPtr& pixel_shader);
 
+	void setBlender(const BlenderPtr& blender);
+
 	void setTexture(const VertexShaderPtr& vertex_shader, const TexturePtr& texture);
 	void setTexture(const PixelShaderPtr& pixel_shader, const TexturePtr& texture);
 
@@ -34,4 +36,5 @@ private:
 private:
 	friend class ConstantBuffer;
 };
+
 

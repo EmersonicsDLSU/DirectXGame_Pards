@@ -129,7 +129,7 @@ void AppWindow::onCreate()
 	InputSystem::get()->showCursor(false);
 
 	// assign the texture file to the Texture pointer by passing the its path in the file
-	m_wood_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\wood.jpg");
+	m_wood_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\coat.png");
 
 	RECT rc = this->getClientWindowRect();
 	m_swap_chain = GraphicsEngine::get()->getRenderSystem()->createSwapChain(
@@ -228,13 +228,9 @@ void AppWindow::onCreate()
 		22,23,20
 	};
 
-
 	UINT size_index_list = ARRAYSIZE(index_list);
 	// set the index list to the indexBuffer
 	m_ib = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(index_list, size_index_list);
-
-
-
 
 	// gets the byte code and size of the vertex shader
 	void* shader_byte_code = nullptr;
@@ -253,6 +249,9 @@ void AppWindow::onCreate()
 	GraphicsEngine::get()->getRenderSystem()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
 	m_ps = GraphicsEngine::get()->getRenderSystem()->createPixelShader(shader_byte_code, size_shader);
 	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+
+	// create blenderPtr
+	m_blender = GraphicsEngine::get()->getRenderSystem()->createBlender();
 
 	constant cc;
 	cc.m_time = 0;
@@ -275,12 +274,7 @@ void AppWindow::onUpdate()
 	RECT rc = this->getClientWindowRect();
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
 
-
-
-
 	update();
-
-
 
 
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_vs, m_cb);
@@ -296,7 +290,8 @@ void AppWindow::onUpdate()
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
 	//SET THE INDICES OF THE TRIANGLE TO DRAW
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_ib);
-
+	//SET THE BLENDING
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setBlender(m_blender);
 
 	// FINALLY DRAW THE TRIANGLE
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);

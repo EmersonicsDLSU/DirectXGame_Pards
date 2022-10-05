@@ -49,6 +49,9 @@
     <Filter Include="GameEngine\GraphicsEngine\ResourceManager\TextureManager">
       <UniqueIdentifier>{bfcd3e81-8c49-4003-98f2-c56ad502b0d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\Blender">
+      <UniqueIdentifier>{8ff2696b-3cb0-4988-8be6-16606d193817}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -101,6 +104,9 @@
     </ClCompile>
     <ClCompile Include="TextureManager.cpp">
       <Filter>GameEngine\GraphicsEngine\ResourceManager\TextureManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Blender.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\Blender</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="Vector2D.h">
       <Filter>GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Blender.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\Blender</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

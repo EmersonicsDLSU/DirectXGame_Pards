@@ -10,6 +10,8 @@
 #include <d3dcompiler.h>
 #include <exception>
 
+#include "Blender.h"
+
 RenderSystem::RenderSystem()
 {
 	D3D_DRIVER_TYPE driver_types[] =
@@ -139,6 +141,17 @@ PixelShaderPtr RenderSystem::createPixelShader(const void* shader_byte_code, siz
 	}
 	catch (...) {}
 	return ps;
+}
+
+BlenderPtr RenderSystem::createBlender()
+{
+	BlenderPtr blender = nullptr;
+	try
+	{
+		blender = std::make_shared<Blender>(this);
+	}
+	catch (...) {}
+	return blender;
 }
 
 bool RenderSystem::compileVertexShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size)

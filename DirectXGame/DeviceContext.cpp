@@ -8,6 +8,8 @@
 #include "Texture.h"
 #include <exception>
 
+#include "Blender.h"
+
 DeviceContext::DeviceContext(ID3D11DeviceContext* device_context, RenderSystem* system) : m_system(system), m_device_context(device_context)
 {
 }
@@ -35,6 +37,14 @@ void DeviceContext::setVertexBuffer(const VertexBufferPtr& vertex_buffer)
 void DeviceContext::setIndexBuffer(const IndexBufferPtr& index_buffer)
 {
 	m_device_context->IASetIndexBuffer(index_buffer->m_buffer, DXGI_FORMAT_R32_UINT, 0);
+}
+
+void DeviceContext::setBlender(const BlenderPtr& blender)
+{
+	float blendFactors[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+	// binds a blend state object to the output merger stage of the pipeline
+	m_device_context->OMSetBlendState(blender->pp_blend_state_, blendFactors, 0xffffffff);
 }
 
 // draw the list of triangles on the screen
