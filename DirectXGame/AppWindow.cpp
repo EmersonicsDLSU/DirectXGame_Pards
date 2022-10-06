@@ -24,7 +24,11 @@ SOFTWARE.*/
 
 
 #include "AppWindow.h"
+
+#include <iostream>
 #include <Windows.h>
+
+#include "EngineTime.h"
 #include "Vector3D.h"
 #include "Matrix4x4.h"
 
@@ -58,18 +62,19 @@ void AppWindow::updateQuadPosition()
 	cc.m_time = ::GetTickCount();
 
 	// increments our vertex position
-	m_delta_pos += m_delta_time / 10.0f;
+	m_delta_pos += EngineTime::getDeltaTime() / 1.0f;
+	/*
 	if (m_delta_pos > 1.0f)
 		m_delta_pos = 0;
-
+	*/
 
 	Matrix4x4 temp;
 
-	m_delta_scale += m_delta_time / 0.15f;
+	m_delta_scale += EngineTime::getDeltaTime() / 0.15f;
 	// creates a scale animation
 	cc.m_world.setScale(Vector3D::lerp(Vector3D(0.5, 0.5, 0), Vector3D(1.0f, 1.0f, 0), (sin(m_delta_scale) + 1.0f) / 2.0f));
 	// creates a translation animation
-	temp.setTranslation(Vector3D::lerp(Vector3D(-1.5f, -1.5f, 0), Vector3D(1.5f, 1.5f, 0), m_delta_pos));
+	temp.setTranslation(Vector3D::lerp(Vector3D(-1.0f, -1.0f, 0), Vector3D(1.0f, 1.0f, 0), (sin(m_delta_pos) + 1.0f) / 2.0f));
 
 	// Transformation of matrices; Note that order is important
 	cc.m_world *= temp;
@@ -183,13 +188,7 @@ void AppWindow::onUpdate()
 	RECT rc = this->getClientWindowRect();
 	GraphicsEngine::get()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
 
-
-
-
 	updateQuadPosition();
-
-
-
 
 	GraphicsEngine::get()->getImmediateDeviceContext()->setConstantBuffer(m_vs, m_cb);
 	GraphicsEngine::get()->getImmediateDeviceContext()->setConstantBuffer(m_ps, m_cb);
@@ -206,10 +205,6 @@ void AppWindow::onUpdate()
 	GraphicsEngine::get()->getImmediateDeviceContext()->drawTriangleStrip(m_vb->getSizeVertexList(), 0);
 	m_swap_chain->present(true);
 
-	// update our delta time(difference of time between succeeding frames)
-	m_old_delta = m_new_delta;
-	m_new_delta = ::GetTickCount();
-	m_delta_time = (m_old_delta) ? ((m_new_delta - m_old_delta) / 1000.0f) : 0;
 }
 
 void AppWindow::onDestroy()

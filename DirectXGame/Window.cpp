@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "EngineTime.h"
 
 //Window* window = nullptr;
 
@@ -98,13 +99,15 @@ bool Window::init()
 	// set this flag to true to indicate that the window is initialized and running
 	m_is_run = true;
 
-
+	EngineTime::initialize();
 
 	return true;
 }
 
 bool Window::broadcast()
 {
+	EngineTime::LogFrameStart();
+
 	MSG msg;
 
 	// renders all the frames of the graphic 'C'
@@ -123,6 +126,7 @@ bool Window::broadcast()
 	// doesn't allow the CPU to throttle due to chunk of processes;
 	// allows a minimal pause of '1' Msec so that the CPU can handle the loop
 	Sleep(1);
+	EngineTime::LogFrameEnd();
 
 	return true;
 }
