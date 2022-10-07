@@ -47,7 +47,7 @@ struct constant
 	Matrix4x4 m_world;
 	Matrix4x4 m_view;
 	Matrix4x4 m_proj;
-	unsigned int m_time;
+	float m_time;
 };
 
 
@@ -63,10 +63,15 @@ float AppWindow::lerp(float start, float end, float delta)
 // updating our constant buffer
 void AppWindow::updateQuadPosition()
 {
-	constant cc;
-	cc.m_time = ::GetTickCount();
 
-#define SWITCH 0
+	constant cc;
+	
+	static float tick = 0.0f;
+	tick += EngineTime::getDeltaTime();
+	cc.m_time = tick;
+	
+
+#define SWITCH 1
 #if SWITCH == 0 
 	static float tick = 0.0f;
 	static float speed = 0.5f;
@@ -74,17 +79,8 @@ void AppWindow::updateQuadPosition()
 	speed = lerp(0.01f, 2.0f, (sin(tick) + 1.0f) / 2.0f);
 	// increments our vertex position
 	m_delta_pos += EngineTime::getDeltaTime() * speed;
-#elif SWITCH == 1
-	m_delta_pos += EngineTime::getDeltaTime() * 1.0F;
-	/*
-	if (m_delta_pos > 1.0f)
-		m_delta_pos = 0;
-	*/
-#endif
 
 	Matrix4x4 temp;
-	
-
 	m_delta_scale += EngineTime::getDeltaTime() / 0.15f;
 	// creates a scale animation
 	cc.m_world.setScale(Vector3D::lerp(Vector3D(0.5, 0.5, 0), Vector3D(1.0f, 1.0f, 0), (sin(m_delta_scale) + 1.0f) / 2.0f));
@@ -95,6 +91,20 @@ void AppWindow::updateQuadPosition()
 
 	// Transformation of matrices; Note that order is important
 	cc.m_world *= temp;
+#elif SWITCH == 1
+	m_delta_pos += EngineTime::getDeltaTime() * 1.0F;
+	/*
+	if (m_delta_pos > 1.0f)
+		m_delta_pos = 0;
+	*/
+
+	Matrix4x4 temp;
+	cc.m_world.setScale(Vector3D(1.0f, 1.0f, 0));
+	temp.setTranslation(Vector3D(0.0f, 0.0f, 0));
+	cc.m_world *= temp;
+	
+#endif
+	
 
 	cc.m_view.setIdentity();
 	cc.m_proj.setOrthoLH
@@ -123,6 +133,8 @@ void AppWindow::onCreate()
 	RECT rc = this->getClientWindowRect();
 	m_swap_chain->init(this->m_hwnd, rc.right - rc.left, rc.bottom - rc.top);
 
+#define SAMPLE 1
+#if SAMPLE == 0
 	vertex list[] =
 	{
 		//X - Y - Z
@@ -131,6 +143,16 @@ void AppWindow::onCreate()
 		{ Vector3D(0.5f,-0.5f,0.0f),     Vector3D(0.75f,-0.73f,0.0f), Vector3D(0,0,1),  Vector3D(1,0,0) },// POS2
 		{ Vector3D(0.5f,0.5f,0.0f),     Vector3D(0.88f,0.77f,0.0f),    Vector3D(1,1,1), Vector3D(0,0,1) }
 	};
+#elif SAMPLE == 1
+	vertex list[] =
+	{
+		//X - Y - Z
+		{Vector3D(-0.2f,-0.1f,0.0f),    Vector3D(-0.7f,-0.9f,0.0f),   Vector3D(0,1,0), Vector3D(1,0,0) }, // POS1
+		{Vector3D(-0.1f,0.8f,0.0f),     Vector3D(-0.9f,0.2f,0.0f),   Vector3D(1,1,0), Vector3D(1,1,0) }, // POS2
+		{ Vector3D(0.1f,-0.7f,0.0f),     Vector3D(0.95f,-0.3f,0.0f), Vector3D(1,0,0),  Vector3D(0,0,1) },// POS2
+		{ Vector3D(0.80f,0.80f,0.0f),     Vector3D(-0.7f,-0.9f,0.0f),    Vector3D(0,0,1), Vector3D(1,1,1) }
+	};
+#endif
 
 	m_vb = GraphicsEngine::get()->createVertexBuffer();
 	UINT size_list = ARRAYSIZE(list);

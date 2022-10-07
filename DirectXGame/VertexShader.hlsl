@@ -25,7 +25,7 @@ cbuffer constant: register(b0)
 	row_major float4x4 m_world;
 	row_major float4x4 m_view;
 	row_major float4x4 m_proj;
-	unsigned int m_time;
+	float m_time;
 };
 
 
@@ -34,14 +34,17 @@ VS_OUTPUT vsmain(VS_INPUT input)
 {
 	VS_OUTPUT output = (VS_OUTPUT)0;
 
-	//	output.position = lerp(input.position, input.position1, (float)((sin((float)(m_time / (float)1000.0f)) + 1.0f) / 2.0f));
+	//output.position = lerp(input.position, input.position1, (float)((sin((float)(m_time)) + 1.0f) / 2.0f));
+	output.position = lerp(input.position, input.position1, (sin(m_time) + 1.0f) / 2.0f);
 
+	/*
 	//WORLD SPACE - multiplies(mul) our position to the world matrix
 	output.position = mul(input.position, m_world);
 	//VIEW SPACE - multiplies(mul) our position to the view matrix
 	output.position = mul(output.position, m_view);
 	//SCREEN SPACE - multiplies(mul) our position to the screen/projection matrix
 	output.position = mul(output.position, m_proj);
+	*/
 
 
 	output.color = input.color;
