@@ -55,26 +55,43 @@ AppWindow::AppWindow()
 {
 }
 
+float AppWindow::lerp(float start, float end, float delta)
+{
+	return start * (1.0f - delta) + end * (delta);
+}
+
 // updating our constant buffer
 void AppWindow::updateQuadPosition()
 {
 	constant cc;
 	cc.m_time = ::GetTickCount();
 
+#define SWITCH 0
+#if SWITCH == 0 
+	static float tick = 0.0f;
+	static float speed = 0.5f;
+	tick += EngineTime::getDeltaTime() / 2.0f;
+	speed = lerp(0.01f, 2.0f, (sin(tick) + 1.0f) / 2.0f);
 	// increments our vertex position
-	m_delta_pos += EngineTime::getDeltaTime() / 1.0f;
+	m_delta_pos += EngineTime::getDeltaTime() * speed;
+#elif SWITCH == 1
+	m_delta_pos += EngineTime::getDeltaTime() * 1.0F;
 	/*
 	if (m_delta_pos > 1.0f)
 		m_delta_pos = 0;
 	*/
+#endif
 
 	Matrix4x4 temp;
+	
 
 	m_delta_scale += EngineTime::getDeltaTime() / 0.15f;
 	// creates a scale animation
 	cc.m_world.setScale(Vector3D::lerp(Vector3D(0.5, 0.5, 0), Vector3D(1.0f, 1.0f, 0), (sin(m_delta_scale) + 1.0f) / 2.0f));
 	// creates a translation animation
-	temp.setTranslation(Vector3D::lerp(Vector3D(-1.0f, -1.0f, 0), Vector3D(1.0f, 1.0f, 0), (sin(m_delta_pos) + 1.0f) / 2.0f));
+	temp.setTranslation(Vector3D::lerp(Vector3D(-0.5f, -0.5f, 0), Vector3D(0.5f, 0.5f, 0), (sin(m_delta_pos) + 1.0f) / 2.0f));
+
+	//std::cout << "DeltaPos: " << m_delta_pos << " -> " << (sin(m_delta_pos) + 1.0f) / 2.0f << "\n";
 
 	// Transformation of matrices; Note that order is important
 	cc.m_world *= temp;
@@ -105,41 +122,7 @@ void AppWindow::onCreate()
 
 	RECT rc = this->getClientWindowRect();
 	m_swap_chain->init(this->m_hwnd, rc.right - rc.left, rc.bottom - rc.top);
-#define SAMPLE 3
-#if SAMPLE == 0 // RAINBOW RECTANGLE
-	vertex list[] =
-	{
-		//X - Y - Z
-		{-0.5f,-0.5f,0.0f,   1,0,0}, // POS1
-		{-0.5f,0.5f,0.0f,    0,1,0}, // POS2
-		{ 0.5f,0.5f,0.0f,    0,0,1}, // POS3
 
-		{ 0.5f,0.5f,0.0f,   0,0,1}, // POS1
-		{ 0.5f,-0.5f,0.0f,   1,0.68f,0.26f}, // POS2
-		{ -0.5f,-0.5f,0.0f,   1,0,0} // POS3
-	};
-#elif SAMPLE == 1 // RAINBOW TRIANGLE
-	vertex list[] =
-	{
-		//X - Y - Z
-		{-0.5f,-0.5f,0.0f,   1,0,0}, // POS1
-		{ 0.0f,0.5f,0.0f,    0,1,0}, // POS2
-		{ 0.5f,-0.5f,0.0f,    0,0,1}, // POS3
-
-	};
-#elif SAMPLE == 2 // GREEN RECTANGLE
-	vertex list[] =
-	{
-		//X - Y - Z
-		{-0.5f,-0.5f,0.0f,   0,1,0}, // POS1
-		{-0.5f,0.5f,0.0f,    0,1,0}, // POS2
-		{ 0.5f,0.5f,0.0f,    0,1,0}, // POS3
-
-		{ 0.5f,0.5f,0.0f,   0,1,0}, // POS1
-		{ 0.5f,-0.5f,0.0f,   0,1,0}, // POS2
-		{ -0.5f,-0.5f,0.0f,   0,1,0}, // POS3
-	};
-#elif SAMPLE == 3
 	vertex list[] =
 	{
 		//X - Y - Z
@@ -148,7 +131,6 @@ void AppWindow::onCreate()
 		{ Vector3D(0.5f,-0.5f,0.0f),     Vector3D(0.75f,-0.73f,0.0f), Vector3D(0,0,1),  Vector3D(1,0,0) },// POS2
 		{ Vector3D(0.5f,0.5f,0.0f),     Vector3D(0.88f,0.77f,0.0f),    Vector3D(1,1,1), Vector3D(0,0,1) }
 	};
-#endif
 
 	m_vb = GraphicsEngine::get()->createVertexBuffer();
 	UINT size_list = ARRAYSIZE(list);

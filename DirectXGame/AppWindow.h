@@ -14,6 +14,7 @@ class AppWindow : public Window
 public:
 	AppWindow();
 
+	float lerp(float start, float end, float delta);
 	void updateQuadPosition();
 
 	~AppWindow();
