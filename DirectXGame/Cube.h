@@ -1,15 +1,15 @@
 #pragma once
 #include "AGameObject.h"
+#include "Prerequisites.h"
 
 class Cube : public AGameObject
 {
 public:
-	Cube(void* shader_byte_code, size_t size_shader, const wchar_t* file_path, char sample);
+	Cube(void* shader_byte_code, size_t size_shader, const wchar_t* file_path);
 	~Cube();
 public:
 	void Update(float deltaTime, void* buffer) override;
-	void Draw(VertexShaderPtr m_vs, PixelShaderPtr m_ps, BlenderPtr m_blender) override;
-	char sample;
+	void Draw(const VertexShaderPtr& m_vs, const PixelShaderPtr& m_ps, const BlenderPtr& m_blender) override;
 private:
 	TexturePtr m_tex;
 	VertexBufferPtr m_vb;

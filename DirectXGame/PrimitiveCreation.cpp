@@ -1,16 +1,19 @@
 #include "PrimitiveCreation.h"
 
+#include "AppWindow.h"
+
 PrimitiveCreation* PrimitiveCreation::m_instance = nullptr;
 
 PrimitiveCreation::PrimitiveCreation()
 {
+
 }
 
 PrimitiveCreation::~PrimitiveCreation()
 {
 }
 
-void PrimitiveCreation::CreateCubeDefault()
+void* PrimitiveCreation::cube_vertex_list()
 {
 	// Position Coords
 	Vector3D position_list[] =
@@ -75,8 +78,12 @@ void PrimitiveCreation::CreateCubeDefault()
 
 
 	};
-	memcpy(cube_vertex_list, vertex_list, sizeof(vertex_list));
 
+	return &vertex_list;
+}
+
+void* PrimitiveCreation::cube_index_list()
+{
 	// list of all the triangle index with their vertex compositions
 	// this index list should reflect the vertex list
 	unsigned int index_list[] =
@@ -100,7 +107,8 @@ void PrimitiveCreation::CreateCubeDefault()
 		20,21,22,
 		22,23,20
 	};
-	memcpy(cube_index_list, index_list, sizeof(index_list));
+
+	return &index_list;
 }
 
 PrimitiveCreation* PrimitiveCreation::get()

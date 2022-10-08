@@ -27,9 +27,8 @@ public:
 	~PrimitiveCreation();
 
 private:
-	void CreateCubeDefault();
-	vertex cube_vertex_list[24];
-	unsigned int cube_index_list[36];
+	void* cube_vertex_list();
+	void* cube_index_list();
 
 public:
 	static PrimitiveCreation* get();

@@ -18,7 +18,9 @@ AppWindow::AppWindow()
 void AppWindow::update()
 {
 	constant cc;
-	cc.m_time = ::GetTickCount();
+	static float tick = 0.0f;
+	tick += EngineTime::getDeltaTime();
+	cc.m_time = tick;
 
 	// increments our vertex position
 	m_delta_pos += EngineTime::getDeltaTime() / 10.0f;
@@ -99,19 +101,15 @@ void AppWindow::update()
 	cc.m_proj.setPerspectiveFovLH(1.57f, ((float)width / (float)height), 0.1f, 100.0f);
 	
 	// Call each object's constant buffer in the scene
-	/*
+	
 	std::vector<AGameObjectPtr>::iterator i;
 	for (i = GameObjectManager::get()->objectList.begin(); i != GameObjectManager::get()->objectList.end(); ++i)
 	{
 		//std::static_pointer_cast<Cube>(*i)->m_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
-		std::cout << "Sample: " << std::static_pointer_cast<Cube>(*i)->sample << "\n";
-		//(*i)->Update(EngineTime::getDeltaTime(), &cc);
+		(*i)->Update(EngineTime::getDeltaTime(), &cc);
 	}
-	*/
-	for (auto i : GameObjectManager::get()->objectList)
-	{
-		i->Update(EngineTime::getDeltaTime(), &cc);
-	}
+	
+	
 }
 
 
@@ -146,7 +144,10 @@ void AppWindow::onCreate()
 	m_vs = GraphicsEngine::get()->getRenderSystem()->createVertexShader(shader_byte_code, size_shader);
 
 	// instantiate a cube and texture
-	CubePtr cube_0(new Cube(shader_byte_code, size_shader, L"Assets\\Textures\\wood.jpg", 'A'));
+	AGameObject* temp = new Cube(shader_byte_code, size_shader, L"Assets\\Textures\\wood.jpg");
+	AGameObjectPtr temp1(temp);
+	// add this object to our manager
+	GameObjectManager::get()->objectList.push_back(temp1);
 
 	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
 
@@ -177,17 +178,13 @@ void AppWindow::onUpdate()
 	update();
 
 	// Call each object in the scene
-	/*
+	
 	std::vector<AGameObjectPtr>::iterator i;
 	for (i = GameObjectManager::get()->objectList.begin(); i != GameObjectManager::get()->objectList.end(); ++i)
 	{
-		static_cast<AGameObjectPtr>(*i)->Draw(m_vs, m_ps, m_blender);
+		(*i)->Draw(m_vs, m_ps, m_blender);
 	}
-	*/
-	for (auto i : GameObjectManager::get()->objectList)
-	{
-		i->Draw(m_vs, m_ps, m_blender);
-	}
+	
 
 	m_swap_chain->present(true);
 
