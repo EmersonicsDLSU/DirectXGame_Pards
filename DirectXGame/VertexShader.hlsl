@@ -17,7 +17,7 @@ struct VS_OUTPUT
 };
 
 
-cbuffer constant: register(b0)
+cbuffer constant_transform: register(b0)
 {
 	row_major float4x4 m_world;
 	row_major float4x4 m_view;

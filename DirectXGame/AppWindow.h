@@ -11,6 +11,8 @@
 #include "InputListener.h"
 #include "Matrix4x4.h"
 
+class Cube;
+
 // displays the main scene; handles the awake,update,end
 class AppWindow : public Window, public InputListener
 {
@@ -42,10 +44,6 @@ private:
 	PixelShaderPtr m_ps;
 	BlenderPtr m_blender;
 private:
-	float m_delta_pos;
-	float m_delta_scale;
-	float m_delta_rot;
-
 	float m_rot_x = 0.0f;
 	float m_rot_y = 0.0f;
 
@@ -54,5 +52,8 @@ private:
 	float m_rightward = 0.0f;
 
 	Matrix4x4 m_world_cam;
+
+private:
+	friend class Cube;
 };
 

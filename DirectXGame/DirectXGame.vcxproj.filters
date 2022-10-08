@@ -70,6 +70,9 @@
     <Filter Include="GameEngine\Tools\EngineTime">
       <UniqueIdentifier>{14483c31-cef8-4b4a-ad94-0de3cd48efb8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\Tools\ContantBufferTypes">
+      <UniqueIdentifier>{0239c0bf-7175-42b8-839f-62a4e367e277}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -229,6 +232,9 @@
     </ClInclude>
     <ClInclude Include="PrimitiveCreation.h">
       <Filter>GameEngine\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="ContantBufferTypes.h">
+      <Filter>GameEngine\Tools\ContantBufferTypes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

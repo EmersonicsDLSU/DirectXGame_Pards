@@ -2,9 +2,11 @@
 
 #include <iostream>
 
+#include "AppWindow.h"
 #include "ConstantBuffer.h"
+#include "ContantBufferTypes.h"
 #include "DeviceContext.h"
-#include "GameObjectManager.h"
+#include "EngineTime.h"
 #include "GraphicsEngine.h"
 #include "IndexBuffer.h"
 #include "PrimitiveCreation.h"
@@ -116,9 +118,10 @@ Cube::Cube(void* shader_byte_code, size_t size_shader, const wchar_t* file_path)
 		shader_byte_code, size_shader);
 
 	// create CB
-	constant cc;
+	constant_transform cc;
 	cc.m_time = 0;
-	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
+	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant_transform));
+	m_cb_texture = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant_texture));
 	
 }
 
@@ -127,15 +130,63 @@ Cube::~Cube()
 
 }
 
-void Cube::Update(float deltaTime, void* buffer)
+void Cube::Update(float deltaTime, AppWindow* app_window)
 {
-	m_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), buffer);
+	constant_transform cc;
+	constant_texture cc_texture;
+	
+	// increments our vertex position
+	deltaPos += EngineTime::getDeltaTime() / 10.0f;
+	if (deltaPos > 1.0f)
+		deltaPos = 0;
+	// objects matrix
+	Matrix4x4 temp;
+	deltaScale += EngineTime::getDeltaTime() / 0.55f;
+
+	cc.m_world.setIdentity();
+	// creating the camera matrix
+	Matrix4x4 world_cam;
+	world_cam.setIdentity();
+	// set the transform rotation X of the object
+	temp.setIdentity();
+	temp.setRotationX(app_window->m_rot_x);
+	// make the object relative to the camera
+	world_cam *= temp;
+	// set the transform rotation Y of the object
+	temp.setIdentity();
+	temp.setRotationY(app_window->m_rot_y);
+	// make the object relative to the camera
+	world_cam *= temp;
+
+	// moving or setting the camera position in the z or x axis
+	Vector3D new_pos = app_window->m_world_cam.getTranslation() + world_cam.getZDirection() * (app_window->m_forward * 0.3f);
+	new_pos = new_pos + world_cam.getXDirection() * (app_window->m_rightward * 0.3f);
+	world_cam.setTranslation(new_pos);
+	// save the newly transformed world_cam to the world_cam from the contant buffer
+	app_window->m_world_cam = world_cam;
+	// convert camera matrix to view matrix
+	world_cam.inverse();
+	// change the view matrix from our constant buffer to the world/camera matrix
+	cc.m_view = world_cam;
+
+	// width and height of the screen
+	int width = (app_window->getClientWindowRect().right - app_window->getClientWindowRect().left) / 300.0f;
+	int height = (app_window->getClientWindowRect().bottom - app_window->getClientWindowRect().left) / 300.0f;
+	// setting the perspective projection
+	cc.m_proj.setPerspectiveFovLH(1.57f, ((float)width / (float)height), 0.1f, 100.0f);
+
+	m_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
+	cc_texture.alpha = alpha;
+	m_cb_texture->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc_texture);
 }
 
 void Cube::Draw(const VertexShaderPtr& m_vs, const PixelShaderPtr& m_ps, const BlenderPtr& m_blender)
 {
+	// for the transform
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_vs, m_cb);
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_ps, m_cb);
+	// for the texture
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_ps, m_cb_texture);
 
 	//SET DEFAULT SHADER IN THE GRAPHICS PIPELINE TO BE ABLE TO DRAW
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_vs);
@@ -147,10 +198,15 @@ void Cube::Draw(const VertexShaderPtr& m_vs, const PixelShaderPtr& m_ps, const B
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
 	//SET THE INDICES OF THE TRIANGLE TO DRAW
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_ib);
-	//SET THE BLENDING
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setBlender(m_blender);
 	// FINALLY DRAW THE TRIANGLE
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(
 		m_ib->getSizeIndexList(), 0, 0);
+	//SET THE BLENDING
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setBlender(m_blender);
+}
+
+void Cube::SetAlpha(float alpha)
+{
+	this->alpha = alpha;
 }
 

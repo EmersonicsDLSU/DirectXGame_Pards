@@ -183,6 +183,7 @@
     <ClInclude Include="AppWindow.h" />
     <ClInclude Include="Blender.h" />
     <ClInclude Include="ConstantBuffer.h" />
+    <ClInclude Include="ContantBufferTypes.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="DeviceContext.h" />
     <ClInclude Include="EngineTime.h" />

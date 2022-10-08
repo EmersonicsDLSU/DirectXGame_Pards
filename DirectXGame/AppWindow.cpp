@@ -8,110 +8,12 @@
 #include "GameObjectManager.h"
 #include "PrimitiveCreation.h"
 #include <vector>
+#include "ContantBufferTypes.h"
 
 
 AppWindow::AppWindow()
 {
 }
-
-// updating our constant buffer
-void AppWindow::update()
-{
-	constant cc;
-	static float tick = 0.0f;
-	tick += EngineTime::getDeltaTime();
-	cc.m_time = tick;
-
-	// increments our vertex position
-	m_delta_pos += EngineTime::getDeltaTime() / 10.0f;
-	if (m_delta_pos > 1.0f)
-		m_delta_pos = 0;
-
-	// objects matrix
-	Matrix4x4 temp;
-
-	m_delta_scale += EngineTime::getDeltaTime() / 0.55f;
-
-	// creates a scale animation
-	//cc.m_world.setScale(Vector3D::lerp(Vector3D(0.5, 0.5, 0), Vector3D(1.0f, 1.0f, 0), (sin(m_delta_scale) + 1.0f) / 2.0f));
-	// creates a translation animation
-	//temp.setTranslation(Vector3D::lerp(Vector3D(-1.5f, -1.5f, 0), Vector3D(1.5f,1.5f, 0), m_delta_pos));
-
-	// Transformation of matrices; Note that order is important
-	//cc.m_world *= temp;
-
-	/*
-	cc.m_world.setScale(Vector3D(m_scale_cube, m_scale_cube, m_scale_cube));
-
-	// rotates it in the Z-axis
-	temp.setIdentity();
-	temp.setRotationZ(0.0f);
-	cc.m_world *= temp;
-
-	// rotates it in the Y-axis
-	temp.setIdentity();
-	temp.setRotationY(m_rot_y);
-	cc.m_world *= temp;
-
-	// rotates it in the X-axis
-	temp.setIdentity();
-	temp.setRotationX(m_rot_x);
-	cc.m_world *= temp;
-	*/
-
-	cc.m_world.setIdentity();
-
-	// creating the camera matrix
-	Matrix4x4 world_cam;
-	world_cam.setIdentity();
-	// set the transform rotation X of the object
-	temp.setIdentity();
-	temp.setRotationX(m_rot_x);
-	// make the object relative to the camera
-	world_cam *= temp;
-	// set the transform rotation Y of the object
-	temp.setIdentity();
-	temp.setRotationY(m_rot_y);
-	// make the object relative to the camera
-	world_cam *= temp;
-	// moving or setting the camera position in the z or x axis
-	Vector3D new_pos = m_world_cam.getTranslation() + world_cam.getZDirection() * (m_forward * 0.3f);
-	 new_pos = new_pos + world_cam.getXDirection() * (m_rightward * 0.3f);
-	// set the camera transform position -2 away from the object
-	world_cam.setTranslation(new_pos);
-	// save the newly transformed world_cam to the world_cam from the contant buffer
-	m_world_cam = world_cam;
-	// convert camera matrix to view matrix
-	world_cam.inverse();
-	// change the view matrix from our constant buffer to the world/camera matrix
-	cc.m_view = world_cam;
-
-	/*cc.m_proj.setOrthoLH
-	(
-		(this->getClientWindowRect().right - this->getClientWindowRect().left) / 300.0f,
-		(this->getClientWindowRect().bottom - this->getClientWindowRect().top) / 300.0f,
-		-4.0f,
-		4.0f
-	);*/
-
-	// width and height of the screen
-	int width = (this->getClientWindowRect().right - this->getClientWindowRect().left) / 300.0f;
-	int height = (this->getClientWindowRect().bottom - this->getClientWindowRect().left) / 300.0f;
-	// setting the perspective projection
-	cc.m_proj.setPerspectiveFovLH(1.57f, ((float)width / (float)height), 0.1f, 100.0f);
-	
-	// Call each object's constant buffer in the scene
-	
-	std::vector<AGameObjectPtr>::iterator i;
-	for (i = GameObjectManager::get()->objectList.begin(); i != GameObjectManager::get()->objectList.end(); ++i)
-	{
-		//std::static_pointer_cast<Cube>(*i)->m_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
-		(*i)->Update(EngineTime::getDeltaTime(), &cc);
-	}
-	
-	
-}
-
 
 AppWindow::~AppWindow()
 {
@@ -133,6 +35,7 @@ void AppWindow::onCreate()
 		this->m_hwnd, rc.right - rc.left, rc.bottom - rc.top);
 
 
+	// set the camera transform position -2 away from the object
 	m_world_cam.setTranslation(Vector3D(0, 0, -2));
 
 	// gets the byte code and size of the vertex shader
@@ -145,9 +48,25 @@ void AppWindow::onCreate()
 
 	// instantiate a cube and texture
 	AGameObject* temp = new Cube(shader_byte_code, size_shader, L"Assets\\Textures\\wood.jpg");
-	AGameObjectPtr temp1(temp);
+	AGameObjectPtr temp_ptr(temp);
 	// add this object to our manager
-	GameObjectManager::get()->objectList.push_back(temp1);
+	GameObjectManager::get()->objectList.push_back(temp_ptr);
+
+	// instantiate a cube and texture
+	AGameObject* temp2 = new Cube(shader_byte_code, size_shader, L"Assets\\Textures\\coat.png");
+	AGameObjectPtr temp_ptr2(temp2);
+	// add this object to our manager
+	GameObjectManager::get()->objectList.push_back(temp_ptr2);
+
+#define SWITCH 1
+#if SWITCH == 0
+	dynamic_cast<Cube*>(temp)->SetAlpha(1.0f);
+	dynamic_cast<Cube*>(temp2)->SetAlpha(1.00f);
+#elif SWITCH == 1
+	dynamic_cast<Cube*>(temp)->SetAlpha(1.0f);
+	dynamic_cast<Cube*>(temp2)->SetAlpha(0.8f);
+#endif
+
 
 	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
 
@@ -161,6 +80,25 @@ void AppWindow::onCreate()
 
 }
 
+// updating our constant buffers
+void AppWindow::update()
+{
+	constant_transform cc;
+	static float tick = 0.0f;
+	tick += EngineTime::getDeltaTime();
+	cc.m_time = tick;
+
+	// Call each object's constant buffer in the scene
+	std::vector<AGameObjectPtr>::iterator i;
+	for (i = GameObjectManager::get()->objectList.begin(); i != GameObjectManager::get()->objectList.end(); ++i)
+	{
+		//std::static_pointer_cast<Cube>(*i)->m_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
+		(*i)->Update(EngineTime::getDeltaTime(), this);
+	}
+
+
+}
+
 void AppWindow::onUpdate()
 {
 	Window::onUpdate();
@@ -170,7 +108,7 @@ void AppWindow::onUpdate()
 
 	//CLEAR THE RENDER TARGET 
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain,
-		0, 0.3f, 0.4f, 1);
+		1.0f, 1.0f, 1.0f, 1);
 	//SET VIEWPORT OF RENDER TARGET IN WHICH WE HAVE TO DRAW
 	RECT rc = this->getClientWindowRect();
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);

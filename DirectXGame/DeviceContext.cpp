@@ -44,7 +44,7 @@ void DeviceContext::setBlender(const BlenderPtr& blender)
 	float blendFactors[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 	// binds a blend state object to the output merger stage of the pipeline
-	m_device_context->OMSetBlendState(blender->pp_blend_state_, blendFactors, 0xffffffff);
+	m_device_context->OMSetBlendState(blender->pp_blend_state_, blendFactors, 0xFFFFFFFF);
 }
 
 // draw the list of triangles on the screen
