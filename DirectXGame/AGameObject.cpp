@@ -8,6 +8,6 @@ AGameObject::~AGameObject()
 {
 }
 
-void AGameObject::Draw()
+void AGameObject::Draw(VertexShaderPtr m_vs, PixelShaderPtr m_ps, BlenderPtr m_blender)
 {
 }

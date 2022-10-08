@@ -1,6 +1,7 @@
 #pragma once
 #include "Prerequisites.h"
 
+
 class AGameObject
 {
 public:
@@ -8,9 +9,7 @@ public:
 	virtual ~AGameObject();
 
 public:
-	virtual void Initialize() = 0;
-
-public:
-	virtual void Draw();
+	virtual void Update(float deltaTime, void* buffer) = 0;
+	virtual void Draw(VertexShaderPtr m_vs, PixelShaderPtr m_ps, BlenderPtr m_blender);
 };
 

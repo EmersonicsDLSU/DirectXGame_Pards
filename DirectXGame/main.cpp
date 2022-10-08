@@ -1,5 +1,7 @@
 #include "AppWindow.h"
 #include "InputSystem.h"
+#include "GameObjectManager.h"
+#include "PrimitiveCreation.h"
 
 int main()
 {
@@ -9,6 +11,10 @@ int main()
 		GraphicsEngine::create();
 		// initialize our InputSystem
 		InputSystem::create();
+		// initialize our GameObjectManager
+		GameObjectManager::create();
+		// initialize our PrimitiveCreation
+		PrimitiveCreation::create();
 	}
 	catch (...) { return -1; }
 	{
@@ -20,6 +26,8 @@ int main()
 		catch (...) {
 			InputSystem::release();
 			GraphicsEngine::release();
+			GameObjectManager::release();
+			PrimitiveCreation::release();
 			return -1;
 		}
 	}
@@ -30,6 +38,8 @@ int main()
 	 */
 	InputSystem::release();
 	GraphicsEngine::release();
+	GameObjectManager::release();
+	PrimitiveCreation::release();
 
 	return 0;
 }

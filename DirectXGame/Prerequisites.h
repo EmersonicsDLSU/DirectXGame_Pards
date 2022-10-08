@@ -17,6 +17,8 @@ class TextureManager;
 class Blender;
 class AGameObject;
 class GameObjectManager;
+class Cube;
+class PrimitiveCreation;
 
 typedef std::shared_ptr<SwapChain> SwapChainPtr;
 typedef std::shared_ptr<DeviceContext> DeviceContextPtr;
@@ -28,3 +30,5 @@ typedef std::shared_ptr<PixelShader> PixelShaderPtr;
 typedef std::shared_ptr<Resource> ResourcePtr;
 typedef std::shared_ptr<Texture> TexturePtr;
 typedef std::shared_ptr<Blender> BlenderPtr;
+typedef std::shared_ptr<AGameObject> AGameObjectPtr;
+typedef std::shared_ptr<Cube> CubePtr;

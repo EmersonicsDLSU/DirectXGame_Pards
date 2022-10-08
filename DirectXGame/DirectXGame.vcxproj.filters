@@ -135,7 +135,12 @@
     <ClCompile Include="Cube.cpp">
       <Filter>GameEngine\Primitives\Cube</Filter>
     </ClCompile>
-    <ClCompile Include="EngineTime.cpp" />
+    <ClCompile Include="EngineTime.cpp">
+      <Filter>GameEngine\Tools\EngineTime</Filter>
+    </ClCompile>
+    <ClCompile Include="PrimitiveCreation.cpp">
+      <Filter>GameEngine\Primitives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -219,7 +224,12 @@
     <ClInclude Include="Cube.h">
       <Filter>GameEngine\Primitives\Cube</Filter>
     </ClInclude>
-    <ClInclude Include="EngineTime.h" />
+    <ClInclude Include="EngineTime.h">
+      <Filter>GameEngine\Tools\EngineTime</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveCreation.h">
+      <Filter>GameEngine\Primitives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader.fx" />

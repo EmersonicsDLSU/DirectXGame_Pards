@@ -38,12 +38,8 @@ public:
 
 private:
 	SwapChainPtr m_swap_chain;
-	VertexBufferPtr m_vb;
 	VertexShaderPtr m_vs;
 	PixelShaderPtr m_ps;
-	ConstantBufferPtr m_cb;
-	IndexBufferPtr m_ib;
-	TexturePtr m_wood_tex;
 	BlenderPtr m_blender;
 private:
 	float m_delta_pos;
