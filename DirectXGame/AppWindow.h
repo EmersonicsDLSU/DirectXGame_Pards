@@ -46,10 +46,6 @@ private:
 	TexturePtr m_wood_tex;
 	BlenderPtr m_blender;
 private:
-	long m_old_delta;
-	long m_new_delta;
-	float m_delta_time;
-
 	float m_delta_pos;
 	float m_delta_scale;
 	float m_delta_rot;

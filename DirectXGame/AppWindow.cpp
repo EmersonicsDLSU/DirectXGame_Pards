@@ -4,6 +4,7 @@
 #include "Vector2D.h"
 #include "Matrix4x4.h"
 #include "InputSystem.h"
+#include "EngineTime.h"
 
 struct vertex
 {
@@ -34,14 +35,14 @@ void AppWindow::update()
 	cc.m_time = ::GetTickCount();
 
 	// increments our vertex position
-	m_delta_pos += m_delta_time / 10.0f;
+	m_delta_pos += EngineTime::getDeltaTime() / 10.0f;
 	if (m_delta_pos > 1.0f)
 		m_delta_pos = 0;
 
 	// objects matrix
 	Matrix4x4 temp;
 
-	m_delta_scale += m_delta_time / 0.55f;
+	m_delta_scale += EngineTime::getDeltaTime() / 0.55f;
 
 	// creates a scale animation
 	//cc.m_world.setScale(Vector3D::lerp(Vector3D(0.5, 0.5, 0), Vector3D(1.0f, 1.0f, 0), (sin(m_delta_scale) + 1.0f) / 2.0f));
@@ -297,11 +298,6 @@ void AppWindow::onUpdate()
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);
 	m_swap_chain->present(true);
 
-
-	m_old_delta = m_new_delta;
-	m_new_delta = ::GetTickCount();
-
-	m_delta_time = (m_old_delta) ? ((m_new_delta - m_old_delta) / 1000.0f) : 0;
 }
 
 void AppWindow::onDestroy()
@@ -340,7 +336,7 @@ void AppWindow::onKeyDown(int key)
 	}
 	else if (key == 'D')
 	{
-		m_rot_y -= 0.707f * m_delta_time;
+		m_rot_y -= 0.707f * EngineTime::getDeltaTime();
 		m_rightward = 1.0f;
 	}
 }
@@ -358,8 +354,8 @@ void AppWindow::onMouseMove(const Point& mouse_pos)
 	int width = (this->getClientWindowRect().right - this->getClientWindowRect().left);
 	int height = (this->getClientWindowRect().bottom - this->getClientWindowRect().top);
 
-	m_rot_x += (mouse_pos.m_y - (height / 2.0f)) * m_delta_time * 0.1f;
-	m_rot_y += (mouse_pos.m_x - (width / 2.0f)) * m_delta_time * 0.1f;
+	m_rot_x += (mouse_pos.m_y - (height / 2.0f)) * EngineTime::getDeltaTime() * 0.1f;
+	m_rot_y += (mouse_pos.m_x - (width / 2.0f)) * EngineTime::getDeltaTime() * 0.1f;
 
 	InputSystem::get()->setCursorPosition(Point((int)(width / 2.0f), (int)(height / 2.0f)));
 }
