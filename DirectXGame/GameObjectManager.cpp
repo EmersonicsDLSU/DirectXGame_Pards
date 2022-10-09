@@ -28,3 +28,8 @@ void GameObjectManager::release()
 		return;
 	delete GameObjectManager::m_instance;
 }
+
+std::vector<AGameObjectPtr>& GameObjectManager::getObjectList()
+{
+	return objectList;
+}

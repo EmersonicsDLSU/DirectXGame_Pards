@@ -9,6 +9,7 @@
 #include "PrimitiveCreation.h"
 #include <vector>
 #include "ContantBufferTypes.h"
+#include "PassRender.h"
 
 
 AppWindow::AppWindow()
@@ -47,33 +48,42 @@ void AppWindow::onCreate()
 	m_vs = GraphicsEngine::get()->getRenderSystem()->createVertexShader(shader_byte_code, size_shader);
 
 	// instantiate a cube and texture
-	AGameObject* temp = new Cube(shader_byte_code, size_shader, L"Assets\\Textures\\wood.jpg");
-	AGameObjectPtr temp_ptr(temp);
+	AGameObject* wood_obj = new Cube(shader_byte_code, size_shader, L"Assets\\Textures\\wood.jpg");
+	AGameObjectPtr temp_ptr(wood_obj);
 	// add this object to our manager
 	GameObjectManager::get()->objectList.push_back(temp_ptr);
 
 	// instantiate a cube and texture
-	AGameObject* temp2 = new Cube(shader_byte_code, size_shader, L"Assets\\Textures\\coat.png");
-	AGameObjectPtr temp_ptr2(temp2);
+	AGameObject* coat_obj = new Cube(shader_byte_code, size_shader, L"Assets\\Textures\\coat.png");
+	AGameObjectPtr temp_ptr2(coat_obj);
 
-#define SWITCH 1
-#if SWITCH == 0
-	dynamic_cast<Cube*>(temp)->SetAlpha(1.0f);
-	dynamic_cast<Cube*>(temp2)->SetAlpha(1.00f);
+#define SWITCH 2
+#if SWITCH == 0 // First demo; no alpha blending yet
+	wood_obj->SetTransform();
+	coat_obj->SetTransform(Vector3D{ 0,0,-2.0f });
+	dynamic_cast<Cube*>(wood_obj)->SetAlpha(1.0f);
+	dynamic_cast<Cube*>(coat_obj)->SetAlpha(1.0f);
 	// add the objects tou our manager
 	GameObjectManager::get()->objectList.push_back(temp_ptr);
 	GameObjectManager::get()->objectList.push_back(temp_ptr2);
-#elif SWITCH == 1
-	temp->SetTransform();
-	temp2->SetTransform(Vector3D{ 0,0,-2.0f });
-	dynamic_cast<Cube*>(temp)->SetAlpha(1.0f);
-	dynamic_cast<Cube*>(temp2)->SetAlpha(0.5f);
+#elif SWITCH == 1 // Demonstrate with no PassRender
+	wood_obj->SetTransform();
+	coat_obj->SetTransform(Vector3D{ 0,0,-2.0f });
+	dynamic_cast<Cube*>(wood_obj)->SetAlpha(1.0f);
+	dynamic_cast<Cube*>(coat_obj)->SetAlpha(0.5f);
 	// add the objects tou our manager
-	GameObjectManager::get()->objectList.push_back(temp_ptr);
 	GameObjectManager::get()->objectList.push_back(temp_ptr2);
+	GameObjectManager::get()->objectList.push_back(temp_ptr);
+#elif SWITCH == 2 // Demonstrate with PassRender
+	wood_obj->SetTransform();
+	coat_obj->SetTransform(Vector3D{ 0,0,-2.0f });
+	dynamic_cast<Cube*>(wood_obj)->SetAlpha(1.0f);
+	dynamic_cast<Cube*>(coat_obj)->SetAlpha(0.5f);
+	// add the objects tou our manager
+	GameObjectManager::get()->objectList.push_back(temp_ptr2);
+	GameObjectManager::get()->objectList.push_back(temp_ptr);
 #endif
-
-
+	
 	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
 
 	// access the PixelShader.hlsl and compile
@@ -102,7 +112,6 @@ void AppWindow::update()
 		(*i)->Update(EngineTime::getDeltaTime(), this);
 	}
 
-
 }
 
 void AppWindow::onUpdate()
@@ -121,14 +130,21 @@ void AppWindow::onUpdate()
 
 	update();
 
+#define PASS 1
+#if PASS == 0 // Demonstrate with no PassRender
 	// Call each object in the scene
-	
 	std::vector<AGameObjectPtr>::iterator i;
 	for (i = GameObjectManager::get()->objectList.begin(); i != GameObjectManager::get()->objectList.end(); ++i)
 	{
 		(*i)->Draw(m_vs, m_ps, m_blender);
 	}
-	
+#elif PASS == 1 // Demonstrate with PassRender
+	PassRender<OpaqueFilterPolicy, FrontToBackPolicy> opaquePass;
+	opaquePass.Render(m_vs, m_ps, m_blender, m_world_cam);
+
+	PassRender<TransparencyFilterPolicy, BackToFrontPolicy> transparencyPass;
+	transparencyPass.Render(m_vs, m_ps, m_blender, m_world_cam);
+#endif
 
 	m_swap_chain->present(true);
 
@@ -150,28 +166,30 @@ void AppWindow::onKillFocus()
 	InputSystem::get()->removeListener(this);
 }
 
+#define NAVIGATE_SPEED 5.0F
+
 // InputListener virtual method definitions
 void AppWindow::onKeyDown(int key)
 {
 	if (key == 'W')
 	{
 		//m_rot_x += 0.707f * m_delta_time;
-		m_forward = 1.0f;
+		m_forward = 1.0f * EngineTime::getDeltaTime() * NAVIGATE_SPEED;
 	}
 	else if (key == 'S')
 	{
 		//m_rot_x -= 0.707f * m_delta_time;
-		m_forward = -1.0f;
+		m_forward = -1.0f * EngineTime::getDeltaTime() * NAVIGATE_SPEED;
 	}
 	else if (key == 'A')
 	{
 		//m_rot_y += 0.707f * m_delta_time;
-		m_rightward = -1.0f;
+		m_rightward = -1.0f * EngineTime::getDeltaTime() * NAVIGATE_SPEED;
 	}
 	else if (key == 'D')
 	{
-		m_rot_y -= 0.707f * EngineTime::getDeltaTime();
-		m_rightward = 1.0f;
+		//m_rot_y -= 0.707f * m_delta_time;
+		m_rightward = 1.0f * EngineTime::getDeltaTime() * NAVIGATE_SPEED;
 	}
 }
 

@@ -14,6 +14,7 @@ public:
 	static GameObjectManager* get();
 	static void create();
 	static void release();
+	std::vector<AGameObjectPtr>& getObjectList();
 	
 private:
 	std::vector<AGameObjectPtr> objectList;
@@ -21,4 +22,3 @@ private:
 	friend class AppWindow;
 	friend class Cube;
 };
-

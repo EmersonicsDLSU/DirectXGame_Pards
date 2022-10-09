@@ -14,6 +14,7 @@ public:
 	void Draw(const VertexShaderPtr& m_vs, const PixelShaderPtr& m_ps, const BlenderPtr& m_blender) override;
 public:
 	void SetAlpha(float alpha);
+	float GetAlpha();
 private:
 	TexturePtr m_tex;
 	VertexBufferPtr m_vb;

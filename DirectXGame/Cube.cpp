@@ -147,9 +147,7 @@ void Cube::Update(float deltaTime, AppWindow* app_window)
 	temp.setRotationY(m_rotation.m_y);
 	temp.setIdentity();
 	temp.setRotationZ(m_rotation.m_z);
-	temp.setIdentity();
-	temp.setScale(m_position);
-	temp.setIdentity();
+	temp.setScale(m_scale);
 	temp.setTranslation(m_position);
 	// Transformation of matrices; Note that order is important
 	cc.m_world *= temp;
@@ -172,7 +170,7 @@ void Cube::Update(float deltaTime, AppWindow* app_window)
 	Vector3D new_pos = app_window->m_world_cam.getTranslation() + world_cam.getZDirection() * (app_window->m_forward * 0.3f);
 	new_pos = new_pos + world_cam.getXDirection() * (app_window->m_rightward * 0.3f);
 	world_cam.setTranslation(new_pos);
-	// save the newly transformed world_cam to the world_cam from the contant buffer
+	// save the newly transformed world_cam to the world_cam from the constant buffer
 	app_window->m_world_cam = world_cam;
 	// convert camera matrix to view matrix
 	world_cam.inverse();
@@ -221,6 +219,11 @@ void Cube::Draw(const VertexShaderPtr& m_vs, const PixelShaderPtr& m_ps, const B
 void Cube::SetAlpha(float alpha)
 {
 	this->alpha = alpha;
+}
+
+float Cube::GetAlpha()
+{
+	return alpha;
 }
 
 

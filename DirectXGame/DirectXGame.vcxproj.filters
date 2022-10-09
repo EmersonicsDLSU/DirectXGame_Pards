@@ -236,6 +236,12 @@
     <ClInclude Include="ContantBufferTypes.h">
       <Filter>GameEngine\Tools\ContantBufferTypes</Filter>
     </ClInclude>
+    <ClInclude Include="RenderPolicies.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\Blender</Filter>
+    </ClInclude>
+    <ClInclude Include="PassRender.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\Blender</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader.fx" />
