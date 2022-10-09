@@ -18,8 +18,8 @@ Blender::Blender(RenderSystem* system) : m_system(system)
 	rt_blend_desc.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
 	D3D11_BLEND_DESC blend_desc = {};
-	blend_desc.AlphaToCoverageEnable = 1;
-	blend_desc.IndependentBlendEnable = 1;
+	blend_desc.AlphaToCoverageEnable = 0;
+	blend_desc.IndependentBlendEnable = 0;
 	blend_desc.RenderTarget[0] = rt_blend_desc;
 
 	if (FAILED(system->m_d3d_device->CreateBlendState(&blend_desc, &pp_blend_state_)))

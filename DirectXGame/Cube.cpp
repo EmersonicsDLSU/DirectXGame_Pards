@@ -132,18 +132,28 @@ Cube::~Cube()
 
 void Cube::Update(float deltaTime, AppWindow* app_window)
 {
+	// transform update
 	constant_transform cc;
-	constant_texture cc_texture;
-	
-	// increments our vertex position
-	deltaPos += EngineTime::getDeltaTime() / 10.0f;
-	if (deltaPos > 1.0f)
-		deltaPos = 0;
+
 	// objects matrix
 	Matrix4x4 temp;
-	deltaScale += EngineTime::getDeltaTime() / 0.55f;
 
 	cc.m_world.setIdentity();
+	
+	// creates a translation animation
+	temp.setIdentity();
+	temp.setRotationX(m_rotation.m_x);
+	temp.setIdentity();
+	temp.setRotationY(m_rotation.m_y);
+	temp.setIdentity();
+	temp.setRotationZ(m_rotation.m_z);
+	temp.setIdentity();
+	temp.setScale(m_position);
+	temp.setIdentity();
+	temp.setTranslation(m_position);
+	// Transformation of matrices; Note that order is important
+	cc.m_world *= temp;
+
 	// creating the camera matrix
 	Matrix4x4 world_cam;
 	world_cam.setIdentity();
@@ -176,6 +186,9 @@ void Cube::Update(float deltaTime, AppWindow* app_window)
 	cc.m_proj.setPerspectiveFovLH(1.57f, ((float)width / (float)height), 0.1f, 100.0f);
 
 	m_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
+
+	// Texture update
+	constant_texture cc_texture;
 	cc_texture.alpha = alpha;
 	m_cb_texture->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc_texture);
 }
@@ -209,4 +222,5 @@ void Cube::SetAlpha(float alpha)
 {
 	this->alpha = alpha;
 }
+
 

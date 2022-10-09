@@ -55,16 +55,22 @@ void AppWindow::onCreate()
 	// instantiate a cube and texture
 	AGameObject* temp2 = new Cube(shader_byte_code, size_shader, L"Assets\\Textures\\coat.png");
 	AGameObjectPtr temp_ptr2(temp2);
-	// add this object to our manager
-	GameObjectManager::get()->objectList.push_back(temp_ptr2);
 
 #define SWITCH 1
 #if SWITCH == 0
 	dynamic_cast<Cube*>(temp)->SetAlpha(1.0f);
 	dynamic_cast<Cube*>(temp2)->SetAlpha(1.00f);
+	// add the objects tou our manager
+	GameObjectManager::get()->objectList.push_back(temp_ptr);
+	GameObjectManager::get()->objectList.push_back(temp_ptr2);
 #elif SWITCH == 1
+	temp->SetTransform();
+	temp2->SetTransform(Vector3D{ 0,0,-2.0f });
 	dynamic_cast<Cube*>(temp)->SetAlpha(1.0f);
-	dynamic_cast<Cube*>(temp2)->SetAlpha(0.8f);
+	dynamic_cast<Cube*>(temp2)->SetAlpha(0.5f);
+	// add the objects tou our manager
+	GameObjectManager::get()->objectList.push_back(temp_ptr);
+	GameObjectManager::get()->objectList.push_back(temp_ptr2);
 #endif
 
 

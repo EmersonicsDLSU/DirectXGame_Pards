@@ -1,6 +1,6 @@
 #pragma once
 #include "Prerequisites.h"
-
+#include "Vector3D.h"
 
 class AppWindow;
 
@@ -13,5 +13,11 @@ public:
 public:
 	virtual void Update(float deltaTime, AppWindow* app_window) = 0;
 	virtual void Draw(const VertexShaderPtr& m_vs, const PixelShaderPtr& m_ps, const BlenderPtr& m_blender);
+public:
+	void SetTransform(Vector3D position = { 0,0,0 }, Vector3D scale = { 1,1,1 }, Vector3D rotation = { 0,0,0 });
+protected:
+	Vector3D m_position;
+	Vector3D m_scale;
+	Vector3D m_rotation;
 };
 
