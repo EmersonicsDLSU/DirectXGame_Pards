@@ -13,7 +13,7 @@ Blender::Blender(RenderSystem* system) : m_system(system)
 	rt_blend_desc.DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
 	rt_blend_desc.BlendOp = D3D11_BLEND_OP_ADD;
 	rt_blend_desc.SrcBlendAlpha = D3D11_BLEND_ONE;
-	rt_blend_desc.DestBlendAlpha = D3D11_BLEND_ZERO;
+	rt_blend_desc.DestBlendAlpha = D3D11_BLEND_ONE;
 	rt_blend_desc.BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	rt_blend_desc.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 

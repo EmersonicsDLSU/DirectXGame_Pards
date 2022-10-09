@@ -99,11 +99,6 @@ void AppWindow::onCreate()
 // updating our constant buffers
 void AppWindow::update()
 {
-	constant_transform cc;
-	static float tick = 0.0f;
-	tick += EngineTime::getDeltaTime();
-	cc.m_time = tick;
-
 	// Call each object's constant buffer in the scene
 	std::vector<AGameObjectPtr>::iterator i;
 	for (i = GameObjectManager::get()->objectList.begin(); i != GameObjectManager::get()->objectList.end(); ++i)

@@ -22,13 +22,6 @@ private:
 	ConstantBufferPtr m_cb;
 	ConstantBufferPtr m_cb_texture;
 private:
-	float ticks = 0.0f;
-	float deltaPos = 0.0f;
-	float deltaScale = 0.0f;
-	float deltaRot = 0.0f;
-	float deltaTime = 0.0f;
-private:
-	float speed = 10.0f;
 	float alpha = 1.0f;
 
 	friend class AppWindow;

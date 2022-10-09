@@ -28,3 +28,4 @@ private:
 	SortingPolicy m_sortingPolicy;
 	FilteringPolicy m_filterPolicy;
 };
+
