@@ -72,8 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\11929057\source\repos\DirectXGame\DirectXGame\Libs\DirectXTex\include;C:\Users\Student\Desktop\Celestial_Emerson\DirectXGame_Pards\DirectXGame\Libs\tinyobjloader\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\11929057\source\repos\DirectXGame\DirectXGame\Libs\DirectXTex\bin;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\DirectXGame\Libs\DirectXTex\include;..\DirectXGame\Libs\tinyobjloader\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\DirectXGame\Libs\DirectXTex\bin;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
