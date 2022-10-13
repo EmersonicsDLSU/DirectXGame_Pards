@@ -11,8 +11,11 @@
 #include "IndexBuffer.h"
 #include "PrimitiveCreation.h"
 
-Cube::Cube(void* shader_byte_code, size_t size_shader, const wchar_t* file_path)
+Cube::Cube()
 {
+	// Set the object type
+	ObjectType = ObjectTypes::CUBE;
+
 	// Position Coords
 	Vector3D position_list[] =
 	{
@@ -104,12 +107,15 @@ Cube::Cube(void* shader_byte_code, size_t size_shader, const wchar_t* file_path)
 	UINT size_list = ARRAYSIZE(vertex_list);
 
 	UINT size_index_list = ARRAYSIZE(index_list);
-
-	// assign the texture file to the Texture pointer by passing the its path in the file
-	m_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(file_path);
-	// create VB
+	
+	// create IB
 	m_ib = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer
 	(index_list, size_index_list);
+
+	// gets the byte code and size of the vertex shader
+	void* shader_byte_code = nullptr;
+	size_t size_shader = 0;
+	GraphicsEngine::get()->getPixelShaderByteCodeAndSize(&shader_byte_code, &size_shader);
 
 	// create VB
 	m_vb = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(
@@ -121,7 +127,9 @@ Cube::Cube(void* shader_byte_code, size_t size_shader, const wchar_t* file_path)
 	constant_transform cc;
 	cc.m_time = 0;
 	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant_transform));
-	m_cb_texture = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant_texture));
+	// Texture update
+	constant_texture cc_texture;
+	m_cb_texture = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc_texture, sizeof(constant_texture));
 	
 }
 
@@ -196,6 +204,7 @@ void Cube::Draw(const VertexShaderPtr& m_vs, const PixelShaderPtr& m_ps, const B
 	// for the transform
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_vs, m_cb);
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_ps, m_cb);
+
 	// for the texture
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_ps, m_cb_texture);
 
@@ -214,6 +223,12 @@ void Cube::Draw(const VertexShaderPtr& m_vs, const PixelShaderPtr& m_ps, const B
 		m_ib->getSizeIndexList(), 0, 0);
 	//SET THE BLENDING
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setBlender(m_blender);
+}
+
+void Cube::SetTexture(const wchar_t* tex_path)
+{
+	// assign the texture file to the Texture pointer by passing the its path in the file
+	m_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(tex_path);
 }
 
 void Cube::SetAlpha(float alpha)

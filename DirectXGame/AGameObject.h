@@ -5,12 +5,19 @@
 class Matrix4x4;
 class AppWindow;
 
+enum ObjectTypes
+{
+	CUBE = 0,
+	MESH
+};
+
 class AGameObject
 {
 public:
 	AGameObject();
 	virtual ~AGameObject();
-
+public:
+	ObjectTypes ObjectType;
 public:
 	virtual void Update(float deltaTime, AppWindow* app_window) = 0;
 	virtual void Draw(const VertexShaderPtr& m_vs, const PixelShaderPtr& m_ps, const BlenderPtr& m_blender);

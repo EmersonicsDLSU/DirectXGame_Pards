@@ -23,6 +23,7 @@ cbuffer constant_texture: register(b0)
 float4 psmain(PS_INPUT input) : SV_TARGET
 {
 	float3 pixelColor = Texture.Sample(TextureSampler,input.texcoord);
+	//float3 pixelColor = Texture.Sample(TextureSampler,input.texcoord * 0.5f);
 	//return Texture.Sample(TextureSampler, input.texcoord);
 	return float4(pixelColor, alpha);
 }

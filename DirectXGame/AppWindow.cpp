@@ -8,8 +8,8 @@
 #include "GameObjectManager.h"
 #include "PrimitiveCreation.h"
 #include <vector>
-#include "ContantBufferTypes.h"
 #include "PassRender.h"
+#include "Mesh.h"
 
 
 AppWindow::AppWindow()
@@ -28,34 +28,35 @@ void AppWindow::onCreate()
 	InputSystem::get()->addListener(this);
 	// hides the cursor
 	InputSystem::get()->showCursor(false);
+	
 
-	// assign the texture file to the Texture pointer by passing the its path in the file
 
 	RECT rc = this->getClientWindowRect();
 	m_swap_chain = GraphicsEngine::get()->getRenderSystem()->createSwapChain(
 		this->m_hwnd, rc.right - rc.left, rc.bottom - rc.top);
 
-
 	// set the camera transform position -2 away from the object
 	m_world_cam.setTranslation(Vector3D(0, 0, -2));
-
-	// gets the byte code and size of the vertex shader
-	void* shader_byte_code = nullptr;
-	size_t size_shader = 0;
-	// access the VertexShader.hlsl and compile
-	GraphicsEngine::get()->getRenderSystem()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
-	// after a successful compiling, create the vertex buffer then
-	m_vs = GraphicsEngine::get()->getRenderSystem()->createVertexShader(shader_byte_code, size_shader);
+	
 
 	// instantiate a cube and texture
-	AGameObject* wood_obj = new Cube(shader_byte_code, size_shader, L"Assets\\Textures\\wood.jpg");
+	Cube* cube = new Cube();
+	cube->SetTexture(L"Assets\\Textures\\wood.jpg");
+	AGameObject* wood_obj = cube;
 	AGameObjectPtr temp_ptr(wood_obj);
-	// add this object to our manager
-	GameObjectManager::get()->objectList.push_back(temp_ptr);
 
 	// instantiate a cube and texture
-	AGameObject* coat_obj = new Cube(shader_byte_code, size_shader, L"Assets\\Textures\\coat.png");
+	Cube* cube1 = new Cube();
+	cube1->SetTexture(L"Assets\\Textures\\coat.png");
+	AGameObject* coat_obj = cube1;
 	AGameObjectPtr temp_ptr2(coat_obj);
+	
+	// instantiate a mesh
+	Mesh* mesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\teapot.obj").get();
+	mesh->SetTexture(L"Assets\\Textures\\brick.png");
+	AGameObject* teapotObj = mesh;
+	AGameObjectPtr temp_ptr3(teapotObj);
+	
 
 #define SWITCH 2
 #if SWITCH == 0 // First demo; no alpha blending yet
@@ -63,7 +64,7 @@ void AppWindow::onCreate()
 	coat_obj->SetTransform(Vector3D{ 0,0,-2.0f });
 	dynamic_cast<Cube*>(wood_obj)->SetAlpha(1.0f);
 	dynamic_cast<Cube*>(coat_obj)->SetAlpha(1.0f);
-	// add the objects tou our manager
+	// add the objects to our manager
 	GameObjectManager::get()->objectList.push_back(temp_ptr);
 	GameObjectManager::get()->objectList.push_back(temp_ptr2);
 #elif SWITCH == 1 // Demonstrate with no PassRender
@@ -71,20 +72,28 @@ void AppWindow::onCreate()
 	coat_obj->SetTransform(Vector3D{ 0,0,-2.0f });
 	dynamic_cast<Cube*>(wood_obj)->SetAlpha(1.0f);
 	dynamic_cast<Cube*>(coat_obj)->SetAlpha(0.5f);
-	// add the objects tou our manager
+	// add the objects to our manager
 	GameObjectManager::get()->objectList.push_back(temp_ptr2);
 	GameObjectManager::get()->objectList.push_back(temp_ptr);
 #elif SWITCH == 2 // Demonstrate with PassRender
 	wood_obj->SetTransform();
 	coat_obj->SetTransform(Vector3D{ 0,0,-2.0f });
+	teapotObj->SetTransform(Vector3D{ 0,0,2.0f });
 	dynamic_cast<Cube*>(wood_obj)->SetAlpha(1.0f);
 	dynamic_cast<Cube*>(coat_obj)->SetAlpha(0.5f);
-	// add the objects tou our manager
+	//dynamic_cast<Mesh*>(coat_obj)->SetAlpha(1.0f);
+	// add the objects to our manager
 	GameObjectManager::get()->objectList.push_back(temp_ptr2);
 	GameObjectManager::get()->objectList.push_back(temp_ptr);
+	GameObjectManager::get()->objectList.push_back(temp_ptr3);
 #endif
-	
-	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+
+	// gets the byte code and size of the vertex shader
+	void* shader_byte_code = nullptr;
+	size_t size_shader = 0;
+	GraphicsEngine::get()->getPixelShaderByteCodeAndSize(&shader_byte_code, &size_shader);
+	// after a successful compiling, create the vertex buffer then
+	m_vs = GraphicsEngine::get()->getRenderSystem()->createVertexShader(shader_byte_code, size_shader);
 
 	// access the PixelShader.hlsl and compile
 	GraphicsEngine::get()->getRenderSystem()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
@@ -104,7 +113,8 @@ void AppWindow::update()
 	for (i = GameObjectManager::get()->objectList.begin(); i != GameObjectManager::get()->objectList.end(); ++i)
 	{
 		//std::static_pointer_cast<Cube>(*i)->m_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
-		(*i)->Update(EngineTime::getDeltaTime(), this);
+		if ((*i) != nullptr)
+			(*i)->Update(EngineTime::getDeltaTime(), this);
 	}
 
 }

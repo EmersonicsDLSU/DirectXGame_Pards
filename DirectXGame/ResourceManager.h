@@ -2,7 +2,6 @@
 #include <unordered_map>
 #include <string>
 #include "Prerequisites.h"
-#include "Resource.h"
 
 /* Abstract class
  * handles resources in such a way to simplify some very complex tasks such as

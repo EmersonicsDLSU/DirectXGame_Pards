@@ -9,7 +9,6 @@ TextureManager::TextureManager() : ResourceManager()
 
 TextureManager::~TextureManager()
 {
-
 }
 
 TexturePtr TextureManager::createTextureFromFile(const wchar_t* file_path)

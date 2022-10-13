@@ -12,6 +12,7 @@
 #include "Matrix4x4.h"
 
 class Cube;
+class Mesh;
 
 // displays the main scene; handles the awake,update,end
 class AppWindow : public Window, public InputListener
@@ -55,5 +56,6 @@ private:
 
 private:
 	friend class Cube;
+	friend class Mesh;
 };
 

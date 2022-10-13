@@ -7,12 +7,13 @@ class AppWindow;
 class Cube : public AGameObject
 {
 public:
-	Cube(void* shader_byte_code, size_t size_shader, const wchar_t* file_path);
+	Cube();
 	~Cube();
 public:
 	void Update(float deltaTime, AppWindow* app_window) override;
 	void Draw(const VertexShaderPtr& m_vs, const PixelShaderPtr& m_ps, const BlenderPtr& m_blender) override;
 public:
+	void SetTexture(const wchar_t* tex_path);
 	void SetAlpha(float alpha);
 	float GetAlpha();
 private:
@@ -23,7 +24,7 @@ private:
 	ConstantBufferPtr m_cb_texture;
 private:
 	float alpha = 1.0f;
-
+private:
 	friend class AppWindow;
 };
 
