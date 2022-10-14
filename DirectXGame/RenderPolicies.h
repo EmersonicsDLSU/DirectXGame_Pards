@@ -22,11 +22,7 @@ public:
 	bool ShouldRender(AGameObjectPtr object)
 	{
 		AGameObject* raw_obj = object.get();
-		if (object->ObjectType == ObjectTypes::CUBE && dynamic_cast<Cube*>(raw_obj)->GetAlpha() >= 1.0f)
-		{
-			return false;
-		}
-		else if (object->ObjectType == ObjectTypes::MESH && dynamic_cast<Mesh*>(raw_obj)->GetAlpha() >= 1.0f)
+		if (dynamic_cast<Cube*>(raw_obj)->GetAlpha() >= 1.0f)
 		{
 			return false;
 		}
@@ -47,11 +43,7 @@ public:
 	bool ShouldRender(AGameObjectPtr object)
 	{
 		AGameObject* raw_obj = object.get();
-		if (object->ObjectType == ObjectTypes::CUBE && dynamic_cast<Cube*>(raw_obj)->GetAlpha() < 1.0f)
-		{
-			return false;
-		}
-		else if (object->ObjectType == ObjectTypes::MESH && dynamic_cast<Mesh*>(raw_obj)->GetAlpha() < 1.0f)
+		if (dynamic_cast<Cube*>(raw_obj)->GetAlpha() < 1.0f)
 		{
 			return false;
 		}

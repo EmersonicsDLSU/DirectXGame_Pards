@@ -9,9 +9,10 @@
 #include "EngineTime.h"
 #include "GraphicsEngine.h"
 #include "IndexBuffer.h"
+#include "Mesh.h"
 #include "PrimitiveCreation.h"
 
-Cube::Cube()
+Cube::Cube(ObjectTypes type) : AGameObject(type)
 {
 	// Set the object type
 	ObjectType = ObjectTypes::CUBE;
@@ -129,6 +130,7 @@ Cube::Cube()
 	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant_transform));
 	// Texture update
 	constant_texture cc_texture;
+	cc_texture.object_type = ObjectType;
 	m_cb_texture = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc_texture, sizeof(constant_texture));
 	
 }
@@ -196,6 +198,7 @@ void Cube::Update(float deltaTime, AppWindow* app_window)
 	// Texture update
 	constant_texture cc_texture;
 	cc_texture.alpha = alpha;
+	cc_texture.object_type = ObjectType;
 	m_cb_texture->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc_texture);
 }
 
@@ -223,6 +226,18 @@ void Cube::Draw(const VertexShaderPtr& m_vs, const PixelShaderPtr& m_ps, const B
 		m_ib->getSizeIndexList(), 0, 0);
 	//SET THE BLENDING
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setBlender(m_blender);
+}
+
+void Cube::SetMesh(const wchar_t* tex_path)
+{
+	m_mesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(tex_path);
+	m_ib = m_mesh.get()->getIndexBuffer();
+	m_vb = m_mesh.get()->getVertexBuffer();
+	// Texture update
+	constant_texture cc_texture;
+	ObjectType = ObjectTypes::MESH;
+	cc_texture.object_type = ObjectType;
+	m_cb_texture = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc_texture, sizeof(constant_texture));
 }
 
 void Cube::SetTexture(const wchar_t* tex_path)

@@ -14,7 +14,7 @@ enum ObjectTypes
 class AGameObject
 {
 public:
-	AGameObject();
+	AGameObject(ObjectTypes type);
 	virtual ~AGameObject();
 public:
 	ObjectTypes ObjectType;

@@ -28,8 +28,6 @@ void AppWindow::onCreate()
 	InputSystem::get()->addListener(this);
 	// hides the cursor
 	InputSystem::get()->showCursor(false);
-	
-
 
 	RECT rc = this->getClientWindowRect();
 	m_swap_chain = GraphicsEngine::get()->getRenderSystem()->createSwapChain(
@@ -37,26 +35,25 @@ void AppWindow::onCreate()
 
 	// set the camera transform position -2 away from the object
 	m_world_cam.setTranslation(Vector3D(0, 0, -2));
-	
 
 	// instantiate a cube and texture
-	Cube* cube = new Cube();
+	Cube* cube = new Cube(ObjectTypes::CUBE);
 	cube->SetTexture(L"Assets\\Textures\\wood.jpg");
 	AGameObject* wood_obj = cube;
 	AGameObjectPtr temp_ptr(wood_obj);
 
 	// instantiate a cube and texture
-	Cube* cube1 = new Cube();
+	Cube* cube1 = new Cube(ObjectTypes::CUBE);
 	cube1->SetTexture(L"Assets\\Textures\\coat.png");
 	AGameObject* coat_obj = cube1;
 	AGameObjectPtr temp_ptr2(coat_obj);
-	
-	// instantiate a mesh
-	Mesh* mesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\teapot.obj").get();
-	mesh->SetTexture(L"Assets\\Textures\\brick.png");
-	AGameObject* teapotObj = mesh;
-	AGameObjectPtr temp_ptr3(teapotObj);
-	
+
+	// instantiate a mesh from cube and texture
+	Cube* cube2 = new Cube(ObjectTypes::CUBE);
+	cube2->SetMesh(L"Assets\\Meshes\\teapot.obj");
+	cube2->SetTexture(L"Assets\\Textures\\brick.png");
+	AGameObject* teapot_obj = cube2;
+	AGameObjectPtr temp_ptr3(teapot_obj);
 
 #define SWITCH 2
 #if SWITCH == 0 // First demo; no alpha blending yet
@@ -78,10 +75,10 @@ void AppWindow::onCreate()
 #elif SWITCH == 2 // Demonstrate with PassRender
 	wood_obj->SetTransform();
 	coat_obj->SetTransform(Vector3D{ 0,0,-2.0f });
-	teapotObj->SetTransform(Vector3D{ 0,0,2.0f });
+	teapot_obj->SetTransform(Vector3D{ 0,0,2.0f }, Vector3D{ 2,2,2 });
 	dynamic_cast<Cube*>(wood_obj)->SetAlpha(1.0f);
 	dynamic_cast<Cube*>(coat_obj)->SetAlpha(0.5f);
-	//dynamic_cast<Mesh*>(coat_obj)->SetAlpha(1.0f);
+	dynamic_cast<Cube*>(teapot_obj)->SetAlpha(1.0f);
 	// add the objects to our manager
 	GameObjectManager::get()->objectList.push_back(temp_ptr2);
 	GameObjectManager::get()->objectList.push_back(temp_ptr);

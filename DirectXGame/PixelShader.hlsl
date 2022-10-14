@@ -18,12 +18,16 @@ cbuffer constant_transform: register(b0)
 cbuffer constant_texture: register(b0)
 {
 	float alpha;
+	unsigned int  object_type;
 };
 
 float4 psmain(PS_INPUT input) : SV_TARGET
 {
 	float3 pixelColor = Texture.Sample(TextureSampler,input.texcoord);
-	//float3 pixelColor = Texture.Sample(TextureSampler,input.texcoord * 0.5f);
+	if (object_type == 0)
+		pixelColor = Texture.Sample(TextureSampler,input.texcoord);
+	else if (object_type == 1)
+		pixelColor = Texture.Sample(TextureSampler,input.texcoord * 0.5f);
 	//return Texture.Sample(TextureSampler, input.texcoord);
 	return float4(pixelColor, alpha);
 }

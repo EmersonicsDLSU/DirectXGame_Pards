@@ -3,7 +3,7 @@
 #include "Matrix4x4.h"
 #include <math.h>
 
-AGameObject::AGameObject()
+AGameObject::AGameObject(ObjectTypes type) : ObjectType(type)
 {
 }
 
