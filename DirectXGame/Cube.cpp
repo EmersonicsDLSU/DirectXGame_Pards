@@ -190,8 +190,17 @@ void Cube::Update(float deltaTime, AppWindow* app_window)
 	// width and height of the screen
 	int width = (app_window->getClientWindowRect().right - app_window->getClientWindowRect().left) / 300.0f;
 	int height = (app_window->getClientWindowRect().bottom - app_window->getClientWindowRect().left) / 300.0f;
+
+	// setting for the orthographic projection
+	cc.m_proj.setOrthoLH
+	(
+		width,
+		height,
+		-40.0f,
+		40.0f
+	);
 	// setting the perspective projection
-	cc.m_proj.setPerspectiveFovLH(1.57f, ((float)width / (float)height), 0.1f, 100.0f);
+	//cc.m_proj.setPerspectiveFovLH(1.57f, ((float)width / (float)height), 0.1f, 100.0f);
 
 	m_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
 

@@ -76,6 +76,15 @@
     <Filter Include="GameEngine\GraphicsEngine\ResourceManager\MeshManager">
       <UniqueIdentifier>{6eb964fe-69d2-40b0-bb2c-fa5331426204}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\Components">
+      <UniqueIdentifier>{62e52718-699f-49b1-92c8-f479b74f1ac5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Components\Rendering">
+      <UniqueIdentifier>{9c445d33-179d-4202-886b-272626ce2b14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Components\Rendering\Camera">
+      <UniqueIdentifier>{bf2e90bb-2147-4804-9a46-453d01a4ab3f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -152,6 +161,9 @@
     </ClCompile>
     <ClCompile Include="MeshManager.cpp">
       <Filter>GameEngine\GraphicsEngine\ResourceManager\MeshManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>GameEngine\Components\Rendering\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -259,6 +271,9 @@
     </ClInclude>
     <ClInclude Include="VertexMesh.h">
       <Filter>GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>GameEngine\Components\Rendering\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

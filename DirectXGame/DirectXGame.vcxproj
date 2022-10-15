@@ -157,6 +157,7 @@
     <ClCompile Include="AGameObject.cpp" />
     <ClCompile Include="AppWindow.cpp" />
     <ClCompile Include="Blender.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="DeviceContext.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="AGameObject.h" />
     <ClInclude Include="AppWindow.h" />
     <ClInclude Include="Blender.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="ContantBufferTypes.h" />
     <ClInclude Include="Cube.h" />

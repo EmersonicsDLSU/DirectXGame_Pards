@@ -79,10 +79,8 @@ void AppWindow::onCreate()
 	GameObjectManager::get()->objectList.push_back(temp_ptr2);
 	GameObjectManager::get()->objectList.push_back(temp_ptr);
 #elif SWITCH == 2 // Demonstrate with PassRender
-	coat_obj->SetPosition(Vector3D{ 0,0,-2.0f });
-	teapot_obj->SetPosition(Vector3D{ 0,0,2.0f });
-	teapot_obj->SetScale(Vector3D{ 2,2,2 });
-	coat_obj1->SetPosition(Vector3D{ 0,0,-4.0f });
+	wood_obj->SetScale(Vector3D{ 0.5f, 0.5f, 0.5f });
+	wood_obj->SetPosition(Vector3D{ 1, 0, 0 });
 	dynamic_cast<Cube*>(wood_obj)->SetAlpha(1.0f);
 	dynamic_cast<Cube*>(coat_obj)->SetAlpha(0.5f);
 	dynamic_cast<Cube*>(coat_obj1)->SetAlpha(0.5f);
@@ -164,7 +162,6 @@ void AppWindow::onUpdate()
 #endif
 
 	m_swap_chain->present(true);
-
 }
 
 void AppWindow::onDestroy()
