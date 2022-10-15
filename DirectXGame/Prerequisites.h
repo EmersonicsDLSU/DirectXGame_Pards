@@ -34,4 +34,3 @@ typedef std::shared_ptr<Texture> TexturePtr;
 typedef std::shared_ptr<Mesh> MeshPtr;
 typedef std::shared_ptr<Blender> BlenderPtr;
 typedef std::shared_ptr<AGameObject> AGameObjectPtr;
-typedef std::shared_ptr<Cube> CubePtr;

@@ -130,6 +130,22 @@ public:
 		setMatrix(out);
 	}
 
+	// operator overload for matrix multiplication
+	Matrix4x4 MultiplyTo (const Matrix4x4& matrix)
+	{
+		Matrix4x4 out;
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				out.m_mat[i][j] =
+					m_mat[i][0] * matrix.m_mat[0][j] + m_mat[i][1] * matrix.m_mat[1][j] +
+					m_mat[i][2] * matrix.m_mat[2][j] + m_mat[i][3] * matrix.m_mat[3][j];
+			}
+		}
+		return out;
+	}
+
 	// deep copy of the passed matrix
 	void setMatrix(const Matrix4x4& matrix)
 	{

@@ -12,7 +12,7 @@
 #include "Mesh.h"
 #include "PrimitiveCreation.h"
 
-Cube::Cube(ObjectTypes type) : AGameObject(type)
+Cube::Cube(std::string name, ObjectTypes type) : AGameObject(name, type)
 {
 	// Set the object type
 	ObjectType = ObjectTypes::CUBE;
@@ -149,7 +149,7 @@ void Cube::Update(float deltaTime, AppWindow* app_window)
 	Matrix4x4 temp;
 
 	cc.m_world.setIdentity();
-	
+
 	// creates a translation animation
 	temp.setIdentity();
 	temp.setRotationX(m_rotation.m_x);

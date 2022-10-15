@@ -7,7 +7,7 @@ class AppWindow;
 class Cube : public AGameObject
 {
 public:
-	Cube(ObjectTypes type);
+	Cube(std::string name, ObjectTypes type);
 	~Cube();
 public:
 	void Update(float deltaTime, AppWindow* app_window) override;
@@ -25,6 +25,10 @@ private:
 	ConstantBufferPtr m_cb;
 	ConstantBufferPtr m_cb_texture;
 private:
+	float ticks = 0.0f;
+	float deltaPos = 0.0f;
+	float deltaScale = 0.0f;
+	float deltaTime = 0.0f;
 	float alpha = 1.0f;
 private:
 	friend class AppWindow;
