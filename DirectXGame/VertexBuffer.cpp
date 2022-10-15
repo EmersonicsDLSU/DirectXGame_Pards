@@ -1,11 +1,12 @@
 #include "VertexBuffer.h"
 #include "RenderSystem.h"
 #include <exception>
+#include <iostream>
 
 
 VertexBuffer::VertexBuffer(void* list_vertices, UINT size_vertex, UINT size_list, 
-	void* shader_byte_code, size_t size_byte_shader, 
-	RenderSystem* system) : m_system(system), m_layout(0), m_buffer(0)
+                           void* shader_byte_code, size_t size_byte_shader, 
+                           RenderSystem* system) : m_system(system), m_layout(0), m_buffer(0)
 {
 	// describe a buffer resource
 	D3D11_BUFFER_DESC buff_desc = {};
@@ -26,6 +27,7 @@ VertexBuffer::VertexBuffer(void* list_vertices, UINT size_vertex, UINT size_list
 
 	if (FAILED(m_system->m_d3d_device->CreateBuffer(&buff_desc, &init_data, &m_buffer)))
 	{
+		std::cout << "Failed!!";
 		throw std::exception("VertexBuffer not created successfully");
 	}
 
@@ -36,7 +38,8 @@ VertexBuffer::VertexBuffer(void* list_vertices, UINT size_vertex, UINT size_list
 	{
 		//SEMANTIC NAME - SEMANTIC INDEX - FORMAT - INPUT SLOT - ALIGNED BYTE OFFSET - INPUT SLOT CLASS - INSTANCE DATA STEP RATE
 		{"POSITION", 0,  DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,D3D11_INPUT_PER_VERTEX_DATA ,0},
-		{"TEXCOORD", 0,  DXGI_FORMAT_R32G32_FLOAT, 0, 12,D3D11_INPUT_PER_VERTEX_DATA ,0 }
+		{ "COLOR", 0,  DXGI_FORMAT_R32G32B32_FLOAT, 0, 12,D3D11_INPUT_PER_VERTEX_DATA ,0 },
+		{ "COLOR", 1,  DXGI_FORMAT_R32G32B32_FLOAT, 0, 24,D3D11_INPUT_PER_VERTEX_DATA ,0 }
 	};
 
 	UINT size_layout = ARRAYSIZE(layout);

@@ -275,6 +275,9 @@
     <ClInclude Include="Camera.h">
       <Filter>GameEngine\Components\Rendering\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="MathUtils.h">
+      <Filter>GameEngine\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader.fx" />

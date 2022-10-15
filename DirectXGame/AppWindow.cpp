@@ -8,6 +8,8 @@
 #include "GameObjectManager.h"
 #include "PrimitiveCreation.h"
 #include <vector>
+
+#include "MathUtils.h"
 #include "PassRender.h"
 #include "Mesh.h"
 
@@ -36,30 +38,20 @@ void AppWindow::onCreate()
 	// set the camera transform position -2 away from the object
 	m_world_cam.setTranslation(Vector3D(0, 0, -2));
 
-	// instantiate a cube and texture
-	Cube* cube = new Cube("cube1", ObjectTypes::CUBE);
-	cube->SetTexture(L"Assets\\Textures\\wood.jpg");
-	AGameObject* wood_obj = cube;
-	AGameObjectPtr temp_ptr(wood_obj);
+	for (int i = 0; i < 100; ++i)
+	{
+		float x = MathUtils::randomFloat(0, 2.5f);
+		float y = MathUtils::randomFloat(0, 2);
 
-	// instantiate a cube and texture
-	Cube* cube1 = new Cube("cube2", ObjectTypes::CUBE);
-	cube1->SetTexture(L"Assets\\Textures\\coat.png");
-	AGameObject* coat_obj = cube1;
-	AGameObjectPtr temp_ptr2(coat_obj);
-
-	// instantiate a mesh from cube and texture
-	Cube* cube2 = new Cube("cube3", ObjectTypes::CUBE);
-	cube2->SetMesh(L"Assets\\Meshes\\teapot.obj");
-	cube2->SetTexture(L"Assets\\Textures\\brick.png");
-	AGameObject* teapot_obj = cube2;
-	AGameObjectPtr temp_ptr3(teapot_obj);
-
-	// instantiate a cube and texture
-	Cube* cube3 = new Cube("cube4", ObjectTypes::CUBE);
-	cube3->SetTexture(L"Assets\\Textures\\coat.png");
-	AGameObject* coat_obj1 = cube3;
-	AGameObjectPtr temp_ptr4(coat_obj1);
+		// instantiate a cube and texture
+		std::string name = "cube" + std::to_string(i);
+		Cube* cube = new Cube(name, ObjectTypes::CUBE);
+		cube->SetSpeed(MathUtils::randomFloat(-4.0f, 4.0f));
+		cube->SetScale(Vector3D{ 0.25f, 0.25f, 0.25f });
+		cube->SetPosition(Vector3D{ x, y, 0 });
+		AGameObjectPtr temp_ptr(cube);
+		GameObjectManager::get()->objectList.push_back(temp_ptr);
+	}
 
 #define SWITCH 2
 #if SWITCH == 0 // First demo; no alpha blending yet
@@ -79,17 +71,6 @@ void AppWindow::onCreate()
 	GameObjectManager::get()->objectList.push_back(temp_ptr2);
 	GameObjectManager::get()->objectList.push_back(temp_ptr);
 #elif SWITCH == 2 // Demonstrate with PassRender
-	wood_obj->SetScale(Vector3D{ 0.5f, 0.5f, 0.5f });
-	wood_obj->SetPosition(Vector3D{ 1, 0, 0 });
-	dynamic_cast<Cube*>(wood_obj)->SetAlpha(1.0f);
-	dynamic_cast<Cube*>(coat_obj)->SetAlpha(0.5f);
-	dynamic_cast<Cube*>(coat_obj1)->SetAlpha(0.5f);
-	dynamic_cast<Cube*>(teapot_obj)->SetAlpha(1.0f);
-	// add the objects to our manager
-	GameObjectManager::get()->objectList.push_back(temp_ptr2);
-	GameObjectManager::get()->objectList.push_back(temp_ptr);
-	GameObjectManager::get()->objectList.push_back(temp_ptr3);
-	GameObjectManager::get()->objectList.push_back(temp_ptr4);
 #endif
 
 	// gets the byte code and size of the vertex shader
@@ -107,6 +88,12 @@ void AppWindow::onCreate()
 	// create blenderPtr
 	m_blender = GraphicsEngine::get()->getRenderSystem()->createBlender();
 
+}
+
+float randomFloat(float x, float y)
+{
+	srand(time(NULL));
+	return rand() % 3;
 }
 
 // updating our constant buffers
@@ -153,12 +140,6 @@ void AppWindow::onUpdate()
 
 	PassRender<TransparencyFilterPolicy, BackToFrontPolicy> transparencyPass;
 	transparencyPass.Render(m_vs, m_ps, m_blender, m_world_cam);
-
-	std::vector<AGameObjectPtr>::iterator i;
-	for (i = GameObjectManager::get()->getObjectList().begin(); i != GameObjectManager::get()->getObjectList().end(); ++i)
-	{
-		std::cout << (*i)->GetName() << "'s Distance: " << (*i)->GetDistance(m_world_cam) << std::endl;
-	}
 #endif
 
 	m_swap_chain->present(true);

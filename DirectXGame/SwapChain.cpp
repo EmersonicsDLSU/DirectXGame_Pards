@@ -81,7 +81,7 @@ SwapChain::SwapChain(HWND hwnd, UINT width, UINT height, RenderSystem* system) :
 	}
 
 	// Create a depth-stencil view
-	hr = device->CreateDepthStencilView(buffer, NULL, &m_dsv);
+	//hr = device->CreateDepthStencilView(buffer, NULL, &m_dsv);
 	buffer->Release();
 
 	if (FAILED(hr))

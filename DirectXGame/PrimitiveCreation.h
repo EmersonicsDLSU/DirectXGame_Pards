@@ -6,7 +6,8 @@
 struct vertex
 {
 	Vector3D position;
-	Vector2D texcoord;
+	Vector3D color;
+	Vector3D color1;
 };
 
 class PrimitiveCreation

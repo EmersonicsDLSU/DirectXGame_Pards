@@ -1,3 +1,5 @@
+#include <ctime>
+
 #include "AppWindow.h"
 #include "InputSystem.h"
 #include "GameObjectManager.h"
@@ -5,6 +7,7 @@
 
 int main()
 {
+	srand((unsigned)time(NULL));
 	try
 	{
 		// initialize our GraphicsEngine

@@ -17,9 +17,10 @@ public:
 	void SetTexture(const wchar_t* tex_path);
 	void SetAlpha(float alpha);
 	float GetAlpha();
+	void SetSpeed(float f);
 private:
 	MeshPtr m_mesh;
-	TexturePtr m_tex;
+	//TexturePtr m_tex;
 	VertexBufferPtr m_vb;
 	IndexBufferPtr m_ib;
 	ConstantBufferPtr m_cb;
@@ -29,6 +30,7 @@ private:
 	float deltaPos = 0.0f;
 	float deltaScale = 0.0f;
 	float deltaTime = 0.0f;
+	float speed = 1.0f;
 	float alpha = 1.0f;
 private:
 	friend class AppWindow;

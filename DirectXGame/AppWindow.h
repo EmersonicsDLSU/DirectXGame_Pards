@@ -26,6 +26,7 @@ public:
 
 	// Inherited via Window
 	virtual void onCreate() override;
+	float randomFloat(float x, float y);
 	virtual void onUpdate() override;
 	virtual void onDestroy() override;
 	virtual void onFocus() override;
