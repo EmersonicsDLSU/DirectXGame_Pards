@@ -4,6 +4,7 @@
 #include "Matrix4x4.h"
 #include "AGameObject.h"
 #include "Cube.h"
+#include "Plane.h"
 #include "Mesh.h"
 #include "Prerequisites.h"
 
@@ -22,9 +23,20 @@ public:
 	bool ShouldRender(AGameObjectPtr object)
 	{
 		AGameObject* raw_obj = object.get();
-		if (dynamic_cast<Cube*>(raw_obj)->GetAlpha() >= 1.0f)
+		switch (raw_obj->ObjectType)
 		{
-			return false;
+		case ObjectTypes::CUBE:
+		{
+			if (dynamic_cast<Cube*>(raw_obj)->GetAlpha() >= 1.0f)
+				return false;
+		}
+		break;
+		case ObjectTypes::PLANE:
+		{
+			if (dynamic_cast<Plane*>(raw_obj)->GetAlpha() >= 1.0f)
+				return false;
+		}
+		break;
 		}
 		return true;
 	}
@@ -43,9 +55,20 @@ public:
 	bool ShouldRender(AGameObjectPtr object)
 	{
 		AGameObject* raw_obj = object.get();
-		if (dynamic_cast<Cube*>(raw_obj)->GetAlpha() < 1.0f)
+		switch (raw_obj->ObjectType)
 		{
-			return false;
+		case ObjectTypes::CUBE:
+		{
+			if (dynamic_cast<Cube*>(raw_obj)->GetAlpha() < 1.0f)
+				return false;
+		}
+		break;
+		case ObjectTypes::PLANE:
+		{
+			if (dynamic_cast<Plane*>(raw_obj)->GetAlpha() < 1.0f)
+				return false;
+		}
+		break;
 		}
 		return true;
 	}

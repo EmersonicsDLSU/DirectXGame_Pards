@@ -5,11 +5,16 @@
 
 Camera::Camera(std::string name, ObjectTypes type) : AGameObject(name, type)
 {
-
+	SetPosition(0.0f, 0.0f, -2.0f);
+	//this->worldCameraMatrix.setTranslation(this->getLocalPosition());
+	this->UpdateViewMatrix();
+	// subscribe this class to the InputSystem
+	InputSystem::get()->addListener(this);
 }
 
 Camera::~Camera()
 {
+	InputSystem::get()->removeListener(this);
 }
 
 void Camera::Update(float deltaTime, AppWindow* app_window)
@@ -29,14 +34,14 @@ void Camera::UpdateViewMatrix()
 	Matrix4x4 temp;
 	temp.setIdentity();
 	// set the transform rotation X of the object
-	temp.setIdentity();
 	temp.setRotationX(GetLocalRotation().m_x);
-	// make the object relative to the camera
 	world_cam *= temp;
 	// set the transform rotation Y of the object
 	temp.setIdentity();
 	temp.setRotationY(GetLocalRotation().m_y);
-	// make the object relative to the camera
+	world_cam *= temp;
+	// set the position of the object
+	temp.setTranslation(GetLocalPosition());
 	world_cam *= temp;
 	
 	// convert camera matrix to view matrix
@@ -59,23 +64,30 @@ void Camera::onKeyDown(int key)
 			z += EngineTime::getDeltaTime() * NAVIGATE_SPEED;
 		}
 		SetPosition(x, y, z);
-		m_forward = 1.0f * EngineTime::getDeltaTime() * NAVIGATE_SPEED;
 		UpdateViewMatrix();
 	}
 	else if (key == 'S')
 	{
-		//m_rot_x -= 0.707f * m_delta_time;
-		m_forward = -1.0f * EngineTime::getDeltaTime() * NAVIGATE_SPEED;
+		if (this->mouseDown) {
+			y -= EngineTime::getDeltaTime() * NAVIGATE_SPEED;
+		}
+		else {
+			z -= EngineTime::getDeltaTime() * NAVIGATE_SPEED;
+		}
+		SetPosition(x, y, z);
+		UpdateViewMatrix();
 	}
 	else if (key == 'A')
 	{
-		//m_rot_y += 0.707f * m_delta_time;
-		m_rightward = -1.0f * EngineTime::getDeltaTime() * NAVIGATE_SPEED;
+		x += EngineTime::getDeltaTime() * NAVIGATE_SPEED;
+		SetPosition(x, y, z);
+		UpdateViewMatrix();
 	}
 	else if (key == 'D')
 	{
-		//m_rot_y -= 0.707f * m_delta_time;
-		m_rightward = 1.0f * EngineTime::getDeltaTime() * NAVIGATE_SPEED;
+		x -= EngineTime::getDeltaTime() * NAVIGATE_SPEED;
+		SetPosition(x, y, z);
+		UpdateViewMatrix();
 	}
 }
 

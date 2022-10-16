@@ -85,6 +85,9 @@
     <Filter Include="GameEngine\Components\Rendering\Camera">
       <UniqueIdentifier>{bf2e90bb-2147-4804-9a46-453d01a4ab3f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\Primitives\Plane">
+      <UniqueIdentifier>{98b7950e-0513-4942-b3b1-d93ee45f7a93}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -164,6 +167,9 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>GameEngine\Components\Rendering\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Plane.cpp">
+      <Filter>GameEngine\Primitives\Plane</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -274,6 +280,9 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>GameEngine\Components\Rendering\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>GameEngine\Primitives\Plane</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

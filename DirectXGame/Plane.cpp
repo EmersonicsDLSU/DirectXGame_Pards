@@ -1,4 +1,4 @@
-#include "Cube.h"
+#include "Plane.h"
 
 #include <iostream>
 
@@ -12,10 +12,10 @@
 #include "Mesh.h"
 #include "PrimitiveCreation.h"
 
-Cube::Cube(std::string name, ObjectTypes type) : AGameObject(name, type)
+Plane::Plane(std::string name, ObjectTypes type) : AGameObject(name, type)
 {
 	// Set the object type
-	ObjectType = ObjectTypes::CUBE;
+	ObjectType = ObjectTypes::PLANE;
 
 	// Position Coords
 	Vector3D position_list[] =
@@ -108,7 +108,7 @@ Cube::Cube(std::string name, ObjectTypes type) : AGameObject(name, type)
 	UINT size_list = ARRAYSIZE(vertex_list);
 
 	UINT size_index_list = ARRAYSIZE(index_list);
-	
+
 	// create IB
 	m_ib = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer
 	(index_list, size_index_list);
@@ -133,59 +133,36 @@ Cube::Cube(std::string name, ObjectTypes type) : AGameObject(name, type)
 	cc_texture.object_type = ObjectType;
 	m_cb_texture = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc_texture, sizeof(constant_texture));
 	
+	SetScale(8, 8, 0.1f);
 }
 
-Cube::~Cube()
+Plane::~Plane()
 {
 
 }
 
-void Cube::Update(float deltaTime, AppWindow* app_window)
+void Plane::Update(float deltaTime, AppWindow* app_window)
 {
 	// transform update
 	constant_transform cc;
 
-	// objects matrix
-	Matrix4x4 temp;
+	Matrix4x4 allMatrix; allMatrix.setIdentity();
+	Matrix4x4 translationMatrix; translationMatrix.setIdentity();  translationMatrix.setTranslation(GetLocalPosition());
+	Matrix4x4 scaleMatrix; scaleMatrix.setScale(GetLocalScale());
+	Vector3D rotation = GetLocalRotation();
+	Matrix4x4 zMatrix; zMatrix.setRotationZ(rotation.m_z);
+	Matrix4x4 xMatrix; xMatrix.setRotationX(rotation.m_x);
+	Matrix4x4 yMatrix; yMatrix.setRotationY(rotation.m_y);
 
-	cc.m_world.setIdentity();
+	//Scale --> Rotate --> Transform as recommended order.
+	Matrix4x4 rotMatrix; rotMatrix.setIdentity();
+	rotMatrix = rotMatrix.MultiplyTo(zMatrix.MultiplyTo(yMatrix.MultiplyTo(xMatrix)));
+	allMatrix = allMatrix.MultiplyTo(scaleMatrix.MultiplyTo(rotMatrix));
+	allMatrix = allMatrix.MultiplyTo(translationMatrix);
+	cc.m_world = allMatrix;
 
-	// creates a translation animation
-	temp.setIdentity();
-	temp.setRotationX(m_rotation.m_x);
-	temp.setIdentity();
-	temp.setRotationY(m_rotation.m_y);
-	temp.setIdentity();
-	temp.setRotationZ(m_rotation.m_z);
-	temp.setScale(m_scale);
-	temp.setTranslation(m_position);
-	// Transformation of matrices; Note that order is important
-	cc.m_world *= temp;
-
-	// creating the camera matrix
-	Matrix4x4 world_cam;
-	world_cam.setIdentity();
-	// set the transform rotation X of the object
-	temp.setIdentity();
-	temp.setRotationX(app_window->m_rot_x);
-	// make the object relative to the camera
-	world_cam *= temp;
-	// set the transform rotation Y of the object
-	temp.setIdentity();
-	temp.setRotationY(app_window->m_rot_y);
-	// make the object relative to the camera
-	world_cam *= temp;
-
-	// moving or setting the camera position in the z or x axis
-	Vector3D new_pos = app_window->m_world_cam.getTranslation() + world_cam.getZDirection() * (app_window->m_forward * 0.3f);
-	new_pos = new_pos + world_cam.getXDirection() * (app_window->m_rightward * 0.3f);
-	world_cam.setTranslation(new_pos);
-	// save the newly transformed world_cam to the world_cam from the constant buffer
-	app_window->m_world_cam = world_cam;
-	// convert camera matrix to view matrix
-	world_cam.inverse();
-	// change the view matrix from our constant buffer to the world/camera matrix
-	cc.m_view = world_cam;
+	Matrix4x4 cameraMatrix = SceneCameraHandler::getInstance()->getSceneCameraViewMatrix();
+	cc.m_view = cameraMatrix;
 
 	// width and height of the screen
 	int width = (app_window->getClientWindowRect().right - app_window->getClientWindowRect().left) / 300.0f;
@@ -215,7 +192,7 @@ void Cube::Update(float deltaTime, AppWindow* app_window)
 	m_cb_texture->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc_texture);
 }
 
-void Cube::Draw(const VertexShaderPtr& m_vs, const PixelShaderPtr& m_ps, const BlenderPtr& m_blender)
+void Plane::Draw(const VertexShaderPtr& m_vs, const PixelShaderPtr& m_ps, const BlenderPtr& m_blender)
 {
 	// for the transform
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_vs, m_cb);
@@ -241,7 +218,7 @@ void Cube::Draw(const VertexShaderPtr& m_vs, const PixelShaderPtr& m_ps, const B
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setBlender(m_blender);
 }
 
-void Cube::SetMesh(const wchar_t* tex_path)
+void Plane::SetMesh(const wchar_t* tex_path)
 {
 	m_mesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(tex_path);
 	m_ib = m_mesh.get()->getIndexBuffer();
@@ -253,18 +230,18 @@ void Cube::SetMesh(const wchar_t* tex_path)
 	m_cb_texture = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc_texture, sizeof(constant_texture));
 }
 
-void Cube::SetTexture(const wchar_t* tex_path)
+void Plane::SetTexture(const wchar_t* tex_path)
 {
 	// assign the texture file to the Texture pointer by passing the its path in the file
 	m_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(tex_path);
 }
 
-void Cube::SetAlpha(float alpha)
+void Plane::SetAlpha(float alpha)
 {
 	this->alpha = alpha;
 }
 
-float Cube::GetAlpha()
+float Plane::GetAlpha()
 {
 	return alpha;
 }

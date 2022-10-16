@@ -11,7 +11,8 @@ class AppWindow;
 enum ObjectTypes
 {
 	CUBE = 0,
-	MESH
+	MESH,
+	PLANE
 };
 
 class AGameObject
