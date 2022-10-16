@@ -90,7 +90,6 @@ public:
 		// selection sort
 		for (i = 0; i < n - 1; i++)
 		{
-
 			// Find the minimum element in
 			// unsorted array
 			max_idx = i;

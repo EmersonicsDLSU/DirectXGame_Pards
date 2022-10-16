@@ -12,7 +12,8 @@ enum ObjectTypes
 {
 	CUBE = 0,
 	MESH,
-	PLANE
+	PLANE,
+	CAMERA
 };
 
 class AGameObject

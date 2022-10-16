@@ -13,10 +13,11 @@
 
 class Cube;
 class Plane;
+class Camera;
 class Mesh;
 
 // displays the main scene; handles the awake,update,end
-class AppWindow : public Window, public InputListener
+class AppWindow : public Window
 {
 public:
 	AppWindow();
@@ -32,19 +33,13 @@ public:
 	virtual void onFocus() override;
 	virtual void onKillFocus() override;
 
-	void onKeyDown(int key) override;
-	void onKeyUp(int key) override;
-	void onMouseMove(const Point& mouse_pos) override;
-	void onLeftMouseDown(const Point& delta_mouse_pos) override;
-	void onLeftMouseUp(const Point& delta_mouse_pos)  override;
-	void onRightMouseDown(const Point& delta_mouse_pos) override;
-	void onRightMouseUp(const Point& delta_mouse_pos) override;
 
 private:
 	SwapChainPtr m_swap_chain;
 	VertexShaderPtr m_vs;
 	PixelShaderPtr m_ps;
 	BlenderPtr m_blender;
+	CameraPtr m_camera;
 private:
 	float m_rot_x = 0.0f;
 	float m_rot_y = 0.0f;
@@ -52,12 +47,10 @@ private:
 	float m_scale_cube = 1.0f;
 	float m_forward = 0.0f;
 	float m_rightward = 0.0f;
-
-	Matrix4x4 m_world_cam;
-
 private:
 	friend class Cube;
 	friend class Plane;
+	friend class Camera;
 	friend class Mesh;
 };
 

@@ -11,6 +11,7 @@
 #include "IndexBuffer.h"
 #include "Mesh.h"
 #include "PrimitiveCreation.h"
+#include "Camera.h"
 
 Plane::Plane(std::string name, ObjectTypes type) : AGameObject(name, type)
 {
@@ -132,8 +133,8 @@ Plane::Plane(std::string name, ObjectTypes type) : AGameObject(name, type)
 	constant_texture cc_texture;
 	cc_texture.object_type = ObjectType;
 	m_cb_texture = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc_texture, sizeof(constant_texture));
-	
-	SetScale(8, 8, 0.1f);
+
+	SetScale(5.0f, 0.1f, 5.0f);
 }
 
 Plane::~Plane()
@@ -160,8 +161,8 @@ void Plane::Update(float deltaTime, AppWindow* app_window)
 	allMatrix = allMatrix.MultiplyTo(scaleMatrix.MultiplyTo(rotMatrix));
 	allMatrix = allMatrix.MultiplyTo(translationMatrix);
 	cc.m_world = allMatrix;
-
-	Matrix4x4 cameraMatrix = SceneCameraHandler::getInstance()->getSceneCameraViewMatrix();
+	
+	Matrix4x4 cameraMatrix = dynamic_cast<Camera*>(&*app_window->m_camera)->GetCamViewMatrix();
 	cc.m_view = cameraMatrix;
 
 	// width and height of the screen
@@ -180,7 +181,8 @@ void Plane::Update(float deltaTime, AppWindow* app_window)
 	);
 #elif VIEW == 1
 	// setting the perspective projection
-	cc.m_proj.setPerspectiveFovLH(1.57f, ((float)width / (float)height), 0.1f, 100.0f);
+	float aspectRatio = (float)width / (float)height;
+	cc.m_proj.setPerspectiveFovLH(aspectRatio, aspectRatio, 0.1f, 100.0f);
 #endif
 
 	m_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);

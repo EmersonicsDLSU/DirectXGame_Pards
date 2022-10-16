@@ -11,6 +11,7 @@
 #include "IndexBuffer.h"
 #include "Mesh.h"
 #include "PrimitiveCreation.h"
+#include "Camera.h"
 
 Cube::Cube(std::string name, ObjectTypes type) : AGameObject(name, type)
 {
@@ -145,47 +146,23 @@ void Cube::Update(float deltaTime, AppWindow* app_window)
 	// transform update
 	constant_transform cc;
 
-	// objects matrix
-	Matrix4x4 temp;
+	Matrix4x4 allMatrix; allMatrix.setIdentity();
+	Matrix4x4 translationMatrix; translationMatrix.setIdentity();  translationMatrix.setTranslation(GetLocalPosition());
+	Matrix4x4 scaleMatrix; scaleMatrix.setScale(GetLocalScale());
+	Vector3D rotation = GetLocalRotation();
+	Matrix4x4 zMatrix; zMatrix.setRotationZ(rotation.m_z);
+	Matrix4x4 xMatrix; xMatrix.setRotationX(rotation.m_x);
+	Matrix4x4 yMatrix; yMatrix.setRotationY(rotation.m_y);
 
-	cc.m_world.setIdentity();
+	//Scale --> Rotate --> Transform as recommended order.
+	Matrix4x4 rotMatrix; rotMatrix.setIdentity();
+	rotMatrix = rotMatrix.MultiplyTo(zMatrix.MultiplyTo(yMatrix.MultiplyTo(xMatrix)));
+	allMatrix = allMatrix.MultiplyTo(scaleMatrix.MultiplyTo(rotMatrix));
+	allMatrix = allMatrix.MultiplyTo(translationMatrix);
+	cc.m_world = allMatrix;
 
-	// creates a translation animation
-	temp.setIdentity();
-	temp.setRotationX(m_rotation.m_x);
-	temp.setIdentity();
-	temp.setRotationY(m_rotation.m_y);
-	temp.setIdentity();
-	temp.setRotationZ(m_rotation.m_z);
-	temp.setScale(m_scale);
-	temp.setTranslation(m_position);
-	// Transformation of matrices; Note that order is important
-	cc.m_world *= temp;
-
-	// creating the camera matrix
-	Matrix4x4 world_cam;
-	world_cam.setIdentity();
-	// set the transform rotation X of the object
-	temp.setIdentity();
-	temp.setRotationX(app_window->m_rot_x);
-	// make the object relative to the camera
-	world_cam *= temp;
-	// set the transform rotation Y of the object
-	temp.setIdentity();
-	temp.setRotationY(app_window->m_rot_y);
-	// make the object relative to the camera
-	world_cam *= temp;
-
-	// moving or setting the camera position in the z or x axis
-	Vector3D new_pos = app_window->m_world_cam.getTranslation() + world_cam.getZDirection() * (app_window->m_forward * 0.3f);
-	new_pos = new_pos + world_cam.getXDirection() * (app_window->m_rightward * 0.3f);
-	world_cam.setTranslation(new_pos);
-	// save the newly transformed world_cam to the world_cam from the constant buffer
-	app_window->m_world_cam = world_cam;
-	// convert camera matrix to view matrix
-	world_cam.inverse();
-	// change the view matrix from our constant buffer to the world/camera matrix
-	cc.m_view = world_cam;
+	Matrix4x4 cameraMatrix = dynamic_cast<Camera*>(&*app_window->m_camera)->GetCamViewMatrix();
+	cc.m_view = cameraMatrix;
 
 	// width and height of the screen
 	int width = (app_window->getClientWindowRect().right - app_window->getClientWindowRect().left) / 300.0f;
@@ -203,7 +180,8 @@ void Cube::Update(float deltaTime, AppWindow* app_window)
 	);
 #elif VIEW == 1
 	// setting the perspective projection
-	cc.m_proj.setPerspectiveFovLH(1.57f, ((float)width / (float)height), 0.1f, 100.0f);
+	float aspectRatio = (float)width / (float)height;
+	cc.m_proj.setPerspectiveFovLH(aspectRatio, aspectRatio, 0.1f, 100.0f);
 #endif
 
 	m_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
