@@ -43,6 +43,8 @@ public:
 
 	double GetDistance(const Matrix4x4& camera);
 	std::string GetName();
+
+	Matrix4x4 GetMatrix();
 protected:
 	std::string name;
 	Vector3D m_position;

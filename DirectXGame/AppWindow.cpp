@@ -157,15 +157,16 @@ void AppWindow::onUpdate()
 	}
 #elif PASS == 1 // Demonstrate with PassRender
 	PassRender<OpaqueFilterPolicy, FrontToBackPolicy> opaquePass;
-	opaquePass.Render(m_vs, m_ps, m_blender, dynamic_cast<Camera*>(&*m_camera)->GetCamViewMatrix());
+	opaquePass.Render(m_vs, m_ps, m_blender, m_camera->GetMatrix());
 
 	PassRender<TransparencyFilterPolicy, BackToFrontPolicy> transparencyPass;
-	transparencyPass.Render(m_vs, m_ps, m_blender, dynamic_cast<Camera*>(&*m_camera)->GetCamViewMatrix());
-	/*
+	transparencyPass.Render(m_vs, m_ps, m_blender, m_camera->GetMatrix());
+	
 	std::vector<AGameObjectPtr>::iterator i;
+	/*
 	for (i = GameObjectManager::get()->getObjectList().begin(); i != GameObjectManager::get()->getObjectList().end(); ++i)
 	{
-		std::cout << (*i)->GetName() << "'s Distance: " << (*i)->GetDistance(m_world_cam) << std::endl;
+		std::cout << (*i)->GetName() << "'s Distance: " << (*i)->GetDistance(m_camera->GetMatrix()) << std::endl;
 	}
 	*/
 #endif

@@ -90,7 +90,7 @@ public:
 		// selection sort
 		for (i = 0; i < n - 1; i++)
 		{
-			// Find the minimum element in
+			// Find the maximum element in
 			// unsorted array
 			max_idx = i;
 			for (j = i + 1; j < n; j++)

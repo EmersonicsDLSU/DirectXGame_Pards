@@ -7,8 +7,7 @@
 Camera::Camera(std::string name, ObjectTypes type, AppWindow* app_window) : AGameObject(name, type)
 {
 	this->appWindow = app_window;
-	SetPosition(0.0f, 0.0f, -2.0f);
-	m_view_cam.setTranslation(Vector3D{ 0.0f, 0.0f, -2.0f });
+	m_view_cam.setTranslation(Vector3D{ 0.0f, 0.0f, 0.0f });
 	//this->worldCameraMatrix.setTranslation(this->getLocalPosition());
 	this->UpdateViewMatrix();
 	// subscribe this class to the InputSystem
