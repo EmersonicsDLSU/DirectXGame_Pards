@@ -18,7 +18,7 @@ cbuffer constant_transform: register(b0)
 cbuffer constant_texture: register(b0)
 {
 	float alpha;
-	unsigned int  object_type;
+	unsigned int object_type;
 };
 
 float4 psmain(PS_INPUT input) : SV_TARGET

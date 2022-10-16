@@ -88,6 +88,7 @@ SwapChain::SwapChain(HWND hwnd, UINT width, UINT height, RenderSystem* system) :
 	{
 		throw std::exception("SwapChain not created successfully");
 	}
+
 }
 
 bool SwapChain::present(bool vsync)

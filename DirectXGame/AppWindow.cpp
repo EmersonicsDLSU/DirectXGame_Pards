@@ -66,19 +66,37 @@ void AppWindow::onCreate()
 
 #define SWITCH 2
 #if SWITCH == 0 // First demo; no alpha blending yet
-	wood_obj->SetTransform();
-	coat_obj->SetTransform(Vector3D{ 0,0,-2.0f });
-	dynamic_cast<Cube*>(wood_obj)->SetAlpha(1.0f);
-	dynamic_cast<Cube*>(coat_obj)->SetAlpha(1.0f);
+	cube->SetScale(Vector3D{ 0.5f, 0.5f, 0.5f });
+	cube->SetPosition(Vector3D{ 1, 0, 0 });
+	cube1->SetPosition(Vector3D{ 0, 0, -1 });
+	cube3->SetPosition(Vector3D{ 0, 0, 1 });
+	plane->SetPosition(0, -1.0f, 0);
+	dynamic_cast<Cube*>(cube)->SetAlpha(1.0f);
+	dynamic_cast<Cube*>(cube1)->SetAlpha(0.5f);
+	dynamic_cast<Cube*>(cube2)->SetAlpha(1.0f);
+	dynamic_cast<Cube*>(cube3)->SetAlpha(0.2f);
+	dynamic_cast<Plane*>(plane)->SetAlpha(1.0f);
 	// add the objects to our manager
 	GameObjectManager::get()->objectList.push_back(temp_ptr);
 	GameObjectManager::get()->objectList.push_back(temp_ptr2);
+	GameObjectManager::get()->objectList.push_back(temp_ptr3);
+	GameObjectManager::get()->objectList.push_back(temp_ptr4);
+	GameObjectManager::get()->objectList.push_back(temp_ptr5);
 #elif SWITCH == 1 // Demonstrate with no PassRender
-	wood_obj->SetTransform();
-	coat_obj->SetTransform(Vector3D{ 0,0,-2.0f });
-	dynamic_cast<Cube*>(wood_obj)->SetAlpha(1.0f);
-	dynamic_cast<Cube*>(coat_obj)->SetAlpha(0.5f);
+	cube->SetScale(Vector3D{ 0.5f, 0.5f, 0.5f });
+	cube->SetPosition(Vector3D{ 1, 0, 0 });
+	cube1->SetPosition(Vector3D{ 0, 0, -1 });
+	cube3->SetPosition(Vector3D{ 0, 0, 1 });
+	plane->SetPosition(0, -1.0f, 0);
+	dynamic_cast<Cube*>(cube)->SetAlpha(1.0f);
+	dynamic_cast<Cube*>(cube1)->SetAlpha(0.5f);
+	dynamic_cast<Cube*>(cube2)->SetAlpha(1.0f);
+	dynamic_cast<Cube*>(cube3)->SetAlpha(0.2f);
+	dynamic_cast<Plane*>(plane)->SetAlpha(1.0f);
 	// add the objects to our manager
+	GameObjectManager::get()->objectList.push_back(temp_ptr5);
+	GameObjectManager::get()->objectList.push_back(temp_ptr4);
+	GameObjectManager::get()->objectList.push_back(temp_ptr3);
 	GameObjectManager::get()->objectList.push_back(temp_ptr2);
 	GameObjectManager::get()->objectList.push_back(temp_ptr);
 #elif SWITCH == 2 // Demonstrate with PassRender
@@ -93,10 +111,10 @@ void AppWindow::onCreate()
 	dynamic_cast<Cube*>(cube3)->SetAlpha(0.2f);
 	dynamic_cast<Plane*>(plane)->SetAlpha(1.0f);
 	// add the objects to our manager
+	GameObjectManager::get()->objectList.push_back(temp_ptr4);
 	GameObjectManager::get()->objectList.push_back(temp_ptr2);
 	GameObjectManager::get()->objectList.push_back(temp_ptr);
 	GameObjectManager::get()->objectList.push_back(temp_ptr3);
-	GameObjectManager::get()->objectList.push_back(temp_ptr4);
 	GameObjectManager::get()->objectList.push_back(temp_ptr5);
 #endif
 
