@@ -181,7 +181,7 @@ void Cube::Update(float deltaTime, AppWindow* app_window)
 #elif VIEW == 1
 	// setting the perspective projection
 	float aspectRatio = (float)width / (float)height;
-	cc.m_proj.setPerspectiveFovLH(aspectRatio, aspectRatio, 0.1f, 100.0f);
+	cc.m_proj.setPerspectiveFovLH(aspectRatio, aspectRatio, 0.1f, 1000.0f);
 #endif
 
 	m_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);

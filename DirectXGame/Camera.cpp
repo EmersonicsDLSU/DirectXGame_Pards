@@ -46,6 +46,7 @@ void Camera::UpdateViewMatrix()
 
 	// moving or setting the camera position in the z or x axis
 	Vector3D new_pos = m_matrix.getTranslation() + world_cam.getZDirection() * (m_forward * 1.0f);
+	new_pos = new_pos + world_cam.getYDirection() * (m_upward * 1.0f);
 	new_pos = new_pos + world_cam.getXDirection() * (m_rightward * 1.0f);
 	temp.setTranslation(new_pos);
 	world_cam = world_cam.MultiplyTo(temp);
@@ -63,6 +64,7 @@ void Camera::onKeyDown(int key)
 	float x = localPos.m_x;
 	float y = localPos.m_y;
 	float z = localPos.m_z;
+
 	if (key == 'W')
 	{
 		z += EngineTime::getDeltaTime() * NAVIGATE_SPEED;
@@ -91,10 +93,25 @@ void Camera::onKeyDown(int key)
 		UpdateViewMatrix();
 		m_rightward = 1.0f * EngineTime::getDeltaTime() * NAVIGATE_SPEED;
 	}
+	else if (key == 'Q')
+	{
+		y += EngineTime::getDeltaTime() * NAVIGATE_SPEED;
+		SetPosition(x, y, z);
+		UpdateViewMatrix();
+		m_upward = 1.0f * EngineTime::getDeltaTime() * NAVIGATE_SPEED;
+	}
+	else if (key == 'E')
+	{
+		y -= EngineTime::getDeltaTime() * NAVIGATE_SPEED;
+		SetPosition(x, y, z);
+		UpdateViewMatrix();
+		m_upward = -1.0f * EngineTime::getDeltaTime() * NAVIGATE_SPEED;
+	}
 }
 
 void Camera::onKeyUp(int key)
 {
+	m_upward = 0.0f;
 	m_forward = 0.0f;
 	m_rightward = 0.0f;
 }
